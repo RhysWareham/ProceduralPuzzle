@@ -10,7 +10,10 @@ public class CodeBarScript : MonoBehaviour
     private int numOfNumbersEntered = 0;
     public bool codeFilled = false;
 
-    
+    [SerializeField] private GameObject emptyFieldPrefab;
+    [SerializeField] private Transform slotSpawnPoint;
+    private float slotOffset = 0.065f;
+    private Vector3 slotSpacing = new Vector3(0.13f,0,0);
 
     // Start is called before the first frame update
     void Start()
@@ -18,10 +21,46 @@ public class CodeBarScript : MonoBehaviour
         emptyField = EnteredSlots[0].GetComponent<SpriteRenderer>().sprite;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
-        
+        EnteredSlots.Clear();
+        float startSpawnPointX = 0;
+        //If even number of numbers needed
+        if (PuzzleManagement.RequiredCode.Count % 2 == 0)
+        {
+            int halfCount = PuzzleManagement.RequiredCode.Count / 2;
+            if (halfCount != 1)
+            {
+                startSpawnPointX = slotSpawnPoint.position.x - slotOffset - (slotSpacing.x * halfCount);
+            }
+            else
+            {
+                startSpawnPointX = slotSpawnPoint.position.x - slotOffset;
+            }
+
+        }
+        else if (PuzzleManagement.RequiredCode.Count != 1)
+        {
+            
+            int halfCount = (PuzzleManagement.RequiredCode.Count - 1) / 2;
+            //float startSpawnPointX;
+            startSpawnPointX = slotSpawnPoint.position.x - (slotSpacing.x * halfCount);
+        }
+
+        Vector3 spawnPointOffset = Vector3.zero;
+        spawnPointOffset.x = startSpawnPointX;
+        Vector3 spawnPoint = slotSpawnPoint.position + spawnPointOffset;
+        spawnPoint = new Vector3(spawnPoint.x, 0, -0.6f);
+
+        for (int i = 0; i < PuzzleManagement.RequiredCode.Count; i++)
+        {
+            
+            GameObject slotPos = Instantiate(emptyFieldPrefab, slotSpawnPoint.position, Quaternion.identity);
+            slotPos.transform.SetParent(this.transform);
+            slotPos.transform.localPosition = spawnPoint + (slotSpacing * i);
+            
+            EnteredSlots.Add(slotPos.transform);
+        }
     }
 
     public void EnterButtonNumber(Sprite enterredNumberSprite, int enterredNumber)
