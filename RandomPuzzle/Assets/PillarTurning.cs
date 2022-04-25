@@ -5,14 +5,11 @@ using UnityEngine;
 public class PillarTurning : MonoBehaviour
 {
     private bool InRange;
-    private Camera holeCamera;
-    private Camera playerCamera;
     private GameObject moveablePillar;
 
     // Start is called before the first frame update
     void Start()
     {
-        holeCamera = GetComponentInChildren<Camera>();
         moveablePillar = GetComponentInChildren<Moveable>().gameObject;
     }
 
@@ -21,14 +18,10 @@ public class PillarTurning : MonoBehaviour
     {
         if(InRange)
         {
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                holeCamera.enabled = true;
-                playerCamera.enabled = false;
-            }
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 moveablePillar.transform.Rotate(0f, -90f, 0f);
+                
             }
             if (Input.GetKeyDown(KeyCode.E))
             {
@@ -40,18 +33,12 @@ public class PillarTurning : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         InRange = true;
-        playerCamera = other.GetComponent<PlayerController>().playerCamera;
     }
 
     private void OnTriggerExit(Collider other)
     {
         InRange = false;
-        other.GetComponent<PlayerController>().playerCamera.enabled = true;
-        holeCamera.enabled = false;
     }
 
-    private void OnTriggerStay(Collider other)
-    {
 
-    }
 }
