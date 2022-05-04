@@ -23,6 +23,7 @@ public class CodeBarScript : MonoBehaviour
 
     private void Awake()
     {
+        ///PUT ALL THIS IN ANOTHER FUNCTON
         EnteredSlots.Clear();
         float startSpawnPointX = 0;
         //If even number of numbers needed
@@ -31,7 +32,7 @@ public class CodeBarScript : MonoBehaviour
             int halfCount = PuzzleManagement.RequiredCode.Count / 2;
             if (halfCount != 1)
             {
-                startSpawnPointX = slotSpawnPoint.position.x - slotOffset - (slotSpacing.x * halfCount);
+                startSpawnPointX = slotSpawnPoint.position.x - slotOffset - (slotSpacing.x * (halfCount-1));
             }
             else
             {
