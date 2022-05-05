@@ -8,14 +8,39 @@ public class PillarSpawningScript : MonoBehaviour
     private int numOfCols;
     private int[,] codeGrid;
     private int[,] directionalGrid; // 1 = North, 2 = East, 3 = South, 4 = West
+    private int[,] numOfDirectionGrid;
+    private int numOfCodeNeeded;
+
+    private enum Directions
+    {
+        NONE,
+        NORTH,
+        EAST,
+        SOUTH,
+        WEST
+    };
+
+    //Pillar spawning
+    private float pillarSpacing = 9f;
+    private float spawnOffset = 4.5f;
+    [SerializeField] GameObject twoWayPillarPrefab;
+    [SerializeField] GameObject fourWayPillarPrefab;
+
+    private PillarNumberScript[,] PillarNumScript;
 
     private void Awake()
     {
+        numOfCodeNeeded = PuzzleManagement.RequiredCode.Count;
+
         SetNumOfRowCols();
         
         codeGrid = new int[numOfRows, numOfCols];
 
         directionalGrid = new int[numOfRows, numOfCols];
+
+        numOfDirectionGrid = new int[numOfRows, numOfCols];
+
+        PillarNumScript = new PillarNumberScript[numOfRows, numOfCols];
 
         for(int i = 0; i < numOfRows; i++)
         {
@@ -28,6 +53,7 @@ public class PillarSpawningScript : MonoBehaviour
         }
 
         FillCodeGrid();
+        SpawnPillars();
     }
 
     private void SetNumOfRowCols()
@@ -44,7 +70,7 @@ public class PillarSpawningScript : MonoBehaviour
                 break;
             case PuzzleManagement.Difficulty.HARD:
                 numOfRows = Random.Range(3, 6);
-                numOfCols = Random.Range(4, 6);
+                numOfCols = Random.Range(4, 7);
                 break;
             default:
                 numOfRows = 3;
@@ -55,157 +81,310 @@ public class PillarSpawningScript : MonoBehaviour
         Debug.Log("num of cols: " + numOfCols);
     }
 
+    /// <summary>
+    /// Function to fill code grid array with code values
+    /// </summary>
     private void FillCodeGrid()
     {
         int codeNumsInGrid = 0;
-        int numOfCodeNeeded = PuzzleManagement.RequiredCode.Count;
+        
         int numOfValidSpaces = (numOfCols * 2) + (numOfRows * 2) - 4;
         int spacesLeft = numOfValidSpaces;
 
         for (int i = 0; i < numOfRows; i++)
         {
+            //If all code numbers have been entered, break out of loop
             if (codeNumsInGrid == numOfCodeNeeded)
             {
                 break;
             }
 
-            for (int x = 0; x < numOfCols; x++)
+            for (int j = 0; j < numOfCols; j++)
             {
+                //If all code numbers have been entered, break out of loop
                 if(codeNumsInGrid == numOfCodeNeeded)
                 {
                     break;
                 }
 
+                //Don't allow number start to be in middle of pillars
                 if (i != 0 && i != numOfRows - 1
-                    && x != 0 && x != numOfCols - 1)
+                    && j != 0 && j != numOfCols - 1)
                 {
-                    //Don't allow number start to be in middle of pillars
-                    codeGrid[i, x] = 10; //10 = not a number
+                    codeGrid[i, j] = 10; //10 = not a number
                     continue;
                 }
 
+                //Number to decide if code number should be entered in this space
                 int shouldEnter = Random.Range(0, 2);
                 
-                //If there are only just enough spaces left to fill grid, Definitely enter this instance
+                //If there are only just enough spaces left to fill grid,
+                //Definitely enter this instance
                 if(spacesLeft == numOfCodeNeeded - codeNumsInGrid)
                 {
                     shouldEnter = 1;
                 }
                 spacesLeft--;
 
-                //If true
+                //If code number should be entered
                 if (shouldEnter == 1)
                 {
-                    codeGrid[i, x] = PuzzleManagement.RequiredCode[codeNumsInGrid];
+                    //Set grid instance to the code number
+                    codeGrid[i, j] = PuzzleManagement.RequiredCode[codeNumsInGrid];
                     codeNumsInGrid++;
 
-                    Debug.Log("Index " + i + "," + x + "= " + codeGrid[i, x]);
+                    
 
 
-                    //If top row
+                    //If grid instance is on top row
                     if (i == 0)
                     {
                         //If top left
-                        if (x == 0)
+                        if (j == 0)
                         {
                             int randChoice = Random.Range(0, 2);
                             if (randChoice == 1)
                             {
                                 //If top row, direction to view number goes down
-                                directionalGrid[i, x] = 3;
+                                directionalGrid[i, j] = 3;
+                                
+                                AddNumberofNumsOnPillar(true, j);
                             }
                             else
                             {
                                 //If Left column, direction goes Right
-                                directionalGrid[i, x] = 2;
+                                directionalGrid[i, j] = 2;
+                                AddNumberofNumsOnPillar(false, i);
                             }
                         }
                         //If top right
-                        else if (x == numOfCols - 1)
+                        else if (j == numOfCols - 1)
                         {
                             int randChoice = Random.Range(0, 2);
                             if (randChoice == 1)
                             {
                                 //If top row, direction to view number goes down
-                                directionalGrid[i, x] = 3;
+                                directionalGrid[i, j] = 3;
+                                AddNumberofNumsOnPillar(true, j);
                             }
                             else
                             {
                                 //If Right column, direction goes Left
-                                directionalGrid[i, x] = 4;
+                                directionalGrid[i, j] = 4;
+                                AddNumberofNumsOnPillar(false, i);
                             }
                         }
                         //If not corner position
                         else
                         {
                             //If top row, direction to view number goes down
-                            directionalGrid[i, x] = 3;
+                            directionalGrid[i, j] = 3;
+                            AddNumberofNumsOnPillar(true, j);
                         }
+                        Debug.Log("Index " + i + "," + j + "= " + codeGrid[i, j] + " going " + (Directions)directionalGrid[i, j]);
+
+
+                        //Continue to next array index
                         continue;
                     }
-                    //If bottom row
+
+                    //If on bottom row
                     if (i == numOfRows - 1)
                     {
                         //If bottom left
-                        if (x == 0)
+                        if (j == 0)
                         {
                             int randChoice = Random.Range(0, 2);
                             if (randChoice == 1)
                             {
                                 //If bottom row, direction to view number goes up
-                                directionalGrid[i, x] = 1;
+                                directionalGrid[i, j] = 1;
+                                AddNumberofNumsOnPillar(true, j);
                             }
                             else
                             {
                                 //If Left column, direction goes Right
-                                directionalGrid[i, x] = 2;
+                                directionalGrid[i, j] = 2;
+                                AddNumberofNumsOnPillar(false, i);
                             }
                         }
                         //If bottom right
-                        else if (x == numOfCols - 1)
+                        else if (j == numOfCols - 1)
                         {
                             int randChoice = Random.Range(0, 2);
                             if (randChoice == 1)
                             {
                                 //If bottom row, direction to view number goes up
-                                directionalGrid[i, x] = 1;
+                                directionalGrid[i, j] = 1;
+                                AddNumberofNumsOnPillar(true, j);
                             }
                             else
                             {
                                 //If Right column, direction goes Left
-                                directionalGrid[i, x] = 4;
+                                directionalGrid[i, j] = 4;
+                                AddNumberofNumsOnPillar(false, i);
                             }
                         }
                         //If not corner position
                         else
                         {
                             //If bottom row, direction to view number goes up
-                            directionalGrid[i, x] = 1;
+                            directionalGrid[i, j] = 1;
+                            AddNumberofNumsOnPillar(true, j);
                         }
+                        Debug.Log("Index " + i + "," + j + "= " + codeGrid[i, j] + " going " + (Directions)directionalGrid[i, j]);
+
+
+                        //Continue to next array index
                         continue;
                     }
+
                     //If Left column
-                    if (x == 0)
+                    if (j == 0)
                     {
                         //If Left column, direction goes Right
-                        directionalGrid[i, x] = 2;
+                        directionalGrid[i, j] = 2;
+                        AddNumberofNumsOnPillar(false, i);
+                        Debug.Log("Index " + i + "," + j + "= " + codeGrid[i, j] + " going " + (Directions)directionalGrid[i, j]);
+
+
                         continue;
                     }
-                    if (x == numOfCols - 1)
+
+                    //If Right column
+                    if (j == numOfCols - 1)
                     {
                         //If Right column, direction goes Left
-                        directionalGrid[i, x] = 4;
+                        directionalGrid[i, j] = 4;
+                        AddNumberofNumsOnPillar(false, i);
+                        Debug.Log("Index " + i + "," + j + "= " + codeGrid[i, j] + " going " + (Directions)directionalGrid[i, j]);
+
+
                         continue;
                     }
 
                     
+                    
+                }
+            }
+        }
+        
+    }
+
+    private void AddNumberofNumsOnPillar(bool vertical, int currentIndex)
+    {
+        //If adding in a vertical line
+        if(vertical)
+        {
+            for (int k = 0; k < numOfRows; k++)
+            {
+                numOfDirectionGrid[k, currentIndex]++;
+            }
+        }
+        //If adding in a horizontal line
+        else
+        {
+            for (int k = 0; k < numOfCols; k++)
+            {
+                numOfDirectionGrid[currentIndex, k]++;
+            }
+        }
+    }
+
+    private void SpawnPillars()
+    {
+        float startSpawnX = 0;
+        float startSpawnZ = 0;
+
+        //If numOfCols is even
+        if(numOfCols % 2 == 0)
+        {
+            int halfCountCols = numOfCols / 2;
+
+            //If half Cols is not 1
+            if(halfCountCols != 1)
+            {
+                startSpawnX = this.transform.position.x - spawnOffset - (pillarSpacing * (halfCountCols - 1));
+            }
+            else
+            {
+                startSpawnX = this.transform.position.x - spawnOffset;
+            }
+        }
+        else
+        {
+            int halfCountCols = (numOfCols - 1) / 2;
+            startSpawnX = this.transform.position.x - (pillarSpacing * (halfCountCols));
+        }
 
 
+        //If numOfRows is even
+        if (numOfRows % 2 == 0)
+        {
+            int halfCountRows = numOfRows / 2;
+            //If half Rows is not 1
+            if (halfCountRows != 1)
+            {
+                startSpawnZ = this.transform.position.z + spawnOffset + (pillarSpacing * (halfCountRows - 1));
+            }
+            else
+            {
+                startSpawnZ = this.transform.position.z + spawnOffset;
+            }
+        }
+        //If odd
+        else
+        {
+            int halfCountRows = (numOfRows - 1) / 2;
+            startSpawnZ = this.transform.position.z + (pillarSpacing * (halfCountRows));
+        }
+
+        Vector3 startSpawnOffset = new Vector3(startSpawnX, 0, startSpawnZ);
+
+        for(int i = 0; i < numOfRows; i++)
+        {
+            for(int j = 0; j < numOfCols; j++)
+            {
+                //If numbers on pillar is less than or equal to 1
+                ///This doesn't take into account if the other direction is at a 90 degree angle, 
+                ///so changed it to if atleast 2 directions then it will be four way
+                ///Could just check if vertical or horizontal to add?
+                if(numOfDirectionGrid[i, j] <= 1)
+                {
+                    //Spawn a 2 way pillar
+                    GameObject pillarPos = Instantiate(twoWayPillarPrefab, this.transform);
+                    pillarPos.transform.position = startSpawnOffset + new Vector3(pillarSpacing * j, 0, -pillarSpacing * i);
+                    PillarNumScript[i,j] = pillarPos.GetComponent<PillarNumberScript>();
+
+                }
+                else
+                {
+                    //Spawn a 4 way pillar
+                    GameObject pillarPos = Instantiate(fourWayPillarPrefab, this.transform);
+                    pillarPos.transform.position = startSpawnOffset + new Vector3(pillarSpacing * j, 0, -pillarSpacing * i);
+                    PillarNumScript[i, j] = pillarPos.GetComponent<PillarNumberScript>();
                 }
 
             }
         }
-        
+        //Vector3 startSpawnPoint = this.transform.position + 
+        //GameObject pillarPos = Instantiate(twoWayPillarPrefab, this.transform);
+        //pillarPos.transform.position = startSpawnOffset;
+    }
+
+    private void CheckDirectionForNumber()
+    {
+        for( int i = 0; i < numOfRows; i++)
+        {
+            for (int j = 0; j < numOfCols; j++)
+            {
+                if(directionalGrid[i, j] != 0)
+                {
+
+                }
+                
+            }
+        }
     }
 
     // Start is called before the first frame update

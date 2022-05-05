@@ -586,6 +586,7 @@ GameObject:
   - component: {fileID: 7936209269033263249}
   - component: {fileID: 1489363528213983465}
   - component: {fileID: 6475146260677787711}
+  - component: {fileID: 4558806029416472034}
   m_Layer: 0
   m_Name: 2WayPillar
   m_TagString: Untagged
@@ -650,6 +651,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.5, y: 8, z: 2.5}
   m_Center: {x: 0, y: 5, z: 0}
+--- !u!114 &4558806029416472034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3895461139263879181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09376132127cb504cbf8c247e4da87b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTwoWay: 1
 --- !u!1 &5431871699957164643
 GameObject:
   m_ObjectHideFlags: 0

@@ -43,3 +43,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74e15b90ceea7de42894818e4d0181ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  twoWayPillarPrefab: {fileID: 3895461139263879181, guid: 2cb82f0a52e3c9b418f41bfce4eee951, type: 3}
+  fourWayPillarPrefab: {fileID: 608308464820806891, guid: 70a13485ea961194f8df2cc9e49d154a, type: 3}

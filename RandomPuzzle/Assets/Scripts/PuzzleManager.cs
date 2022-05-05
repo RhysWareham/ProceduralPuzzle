@@ -36,7 +36,7 @@ public class PuzzleManager : MonoBehaviour
                 lengthOfCode = Random.Range(4, 8);
                 break;
             case PuzzleManagement.Difficulty.HARD:
-                lengthOfCode = Random.Range(6, 9);
+                lengthOfCode = Random.Range(5, 9);
                 break;
 
         }
@@ -45,7 +45,7 @@ public class PuzzleManager : MonoBehaviour
         GenerateCode();
         SpawnCodeBar();
 
-        SpawnPillars();
+        SpawnPillarCreator();
     }
 
     private void GenerateCode()
@@ -64,7 +64,7 @@ public class PuzzleManager : MonoBehaviour
         Instantiate(codeBarPrefab, codePanelPos);
     }
 
-    private void SpawnPillars()
+    private void SpawnPillarCreator()
     {
         Instantiate(pillarSpawnerPrefab, pillarSpawnPos);
     }
