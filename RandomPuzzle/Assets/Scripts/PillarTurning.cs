@@ -6,6 +6,10 @@ public class PillarTurning : MonoBehaviour
 {
     private bool InRange;
     private GameObject moveablePillar;
+    private float pillarRotateSpeed = 5f;
+    private Coroutine turningCoroutine;
+
+    private Vector3 targetRotation;
 
     // Start is called before the first frame update
     void Start()
@@ -20,14 +24,45 @@ public class PillarTurning : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                moveablePillar.transform.Rotate(0f, -90f, 0f);
+                if(turningCoroutine != null)
+                {
+                    //moveablePillar.transform.Rotate(0f, -90f, 0f);
+                    StopCoroutine(turningCoroutine);
+                    Quaternion target = Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z);
+                    moveablePillar.transform.rotation = target;
+                }
+
+                turningCoroutine = StartCoroutine(RotatePillar(-1));
+                
                 
             }
             if (Input.GetKeyDown(KeyCode.E))
             {
-                moveablePillar.transform.Rotate(0f, 90f, 0f);
+                if(turningCoroutine != null)
+                {
+                    //moveablePillar.transform.Rotate(0f, 90f, 0f);
+                    StopCoroutine(turningCoroutine);
+                    Quaternion target = Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z);
+                    moveablePillar.transform.rotation = target;
+
+                }
+                
+                turningCoroutine = StartCoroutine(RotatePillar(1));
+                
             }
         }
+    }
+
+    private IEnumerator RotatePillar(int direction)
+    {
+        targetRotation = new Vector3(moveablePillar.transform.eulerAngles.x, moveablePillar.transform.eulerAngles.y + (90 * direction), moveablePillar.transform.eulerAngles.z);
+
+        while(moveablePillar.transform.eulerAngles != targetRotation)
+        {
+            moveablePillar.transform.rotation = Quaternion.Slerp(moveablePillar.transform.rotation, Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z), Time.deltaTime * pillarRotateSpeed);
+            yield return 0;
+        }
+        //turningCoroutine = null;
     }
 
     private void OnTriggerEnter(Collider other)
