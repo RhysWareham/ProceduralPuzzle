@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6515755911186670352
+--- !u!1 &7422349327437943341
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2523844850571988994}
-  - component: {fileID: 9056706219657895731}
+  - component: {fileID: 5136892796815318753}
+  - component: {fileID: 3406462461949074800}
   m_Layer: 0
-  m_Name: PillarSpawner
+  m_Name: Whole3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2523844850571988994
+--- !u!4 &5136892796815318753
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6515755911186670352}
+  m_GameObject: {fileID: 7422349327437943341}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -31,23 +31,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9056706219657895731
+--- !u!114 &3406462461949074800
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6515755911186670352}
+  m_GameObject: {fileID: 7422349327437943341}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74e15b90ceea7de42894818e4d0181ee, type: 3}
+  m_Script: {fileID: 11500000, guid: 08bed409f99b38f4299b194388cd7b01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  twoWayPillarPrefab: {fileID: 3895461139263879181, guid: 2cb82f0a52e3c9b418f41bfce4eee951, type: 3}
-  fourWayPillarPrefab: {fileID: 608308464820806891, guid: 70a13485ea961194f8df2cc9e49d154a, type: 3}
-  maxNumParts: 7
-  num3: {fileID: 3762976027720815731, guid: 923de1b9feffd724599af1d43e5c276a, type: 3}
-  thisNumberParts: []
-  allWholeNumbers:
-  - {fileID: 1573810697264227974, guid: 923de1b9feffd724599af1d43e5c276a, type: 3}
-  - {fileID: 4007634887546199728, guid: a14740af9b0a1d943869339d1beadfbd, type: 3}
+  numParts:
+  - {fileID: 21300000, guid: a9150ad241eefeb49b5248fbe773d6e9, type: 3}
+  - {fileID: 21300000, guid: 2c9656c3ed8345b459e62a1eee783017, type: 3}
+  - {fileID: 21300000, guid: e9be4bd318fd8f64eb439406d54fc9f9, type: 3}

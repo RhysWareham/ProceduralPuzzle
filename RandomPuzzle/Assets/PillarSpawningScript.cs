@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class PillarSpawningScript : MonoBehaviour
 {
     private int numOfRows;
@@ -27,6 +29,11 @@ public class PillarSpawningScript : MonoBehaviour
     [SerializeField] GameObject fourWayPillarPrefab;
 
     private PillarNumberScript[,] PillarNumScript;
+
+    [SerializeField] private int maxNumParts = 7;
+    [SerializeField] private GameObject num3;
+    [SerializeField] private List<SpriteRenderer> thisNumberParts = new List<SpriteRenderer>();
+    [SerializeField] private List<WholeNumberParts> allWholeNumbers = new List<WholeNumberParts>();
 
     private void Awake()
     {
@@ -54,10 +61,12 @@ public class PillarSpawningScript : MonoBehaviour
 
         FillCodeGrid();
         SpawnPillars();
+        CheckDirectionForNumber();
     }
 
     private void SetNumOfRowCols()
     {
+        
         switch (PuzzleManagement.ChosenDifficulty)
         {
             case PuzzleManagement.Difficulty.EASY:
@@ -77,6 +86,8 @@ public class PillarSpawningScript : MonoBehaviour
                 numOfCols = 3;
                 break;
         }
+        numOfRows = 3;
+        numOfCols = 3;
         Debug.Log("num of rows: " + numOfRows);
         Debug.Log("num of cols: " + numOfCols);
     }
@@ -372,6 +383,26 @@ public class PillarSpawningScript : MonoBehaviour
         //pillarPos.transform.position = startSpawnOffset;
     }
 
+    public void SplitNum(WholeNumberParts numPartsPrefab)
+    {
+        thisNumberParts = numPartsPrefab.numParts;
+        //if(thisNumberParts.Count > //availablePillars)
+        //{
+        //    //Share them out
+        //}
+        //Could shuffle before this
+
+        //Shuffle the parts up here
+        //SpriteRenderer[] numPartsArray = numPartsPrefab.numParts;
+        //for (int i = 0; i < numPartsArray.Length; i++)
+        //{
+        //    thisNumberParts.Add(thi[i].sprite);
+        //}
+    }
+    public void DetermineHowMuchOfEachNumber(int numOfAvailablePillars )
+    {
+
+    }
     private void CheckDirectionForNumber()
     {
         for( int i = 0; i < numOfRows; i++)
@@ -380,7 +411,57 @@ public class PillarSpawningScript : MonoBehaviour
             {
                 if(directionalGrid[i, j] != 0)
                 {
+                    //Separates number prefab into separate sprites
+                    ///Next will split into even amounts
+                    SplitNum(allWholeNumbers[codeGrid[i,j]-1]);
 
+                    //If going down the rows with number facing north
+                    //If number must be seen through south direction
+                    if (directionalGrid[i, j] == 1 || directionalGrid[i,j] == 3)
+                    {
+                        for (int k = 0; k < numOfRows; k++)
+                        {
+                            PillarNumScript[k, j].InsertNumberSprite(directionalGrid[i, j], numOfRows, thisNumberParts[k]);
+                        }
+                    }
+                    else
+                    {
+                        for (int k = 0; k < numOfCols; k++)
+                        {
+                            PillarNumScript[i, k].InsertNumberSprite(directionalGrid[i, j], numOfCols, thisNumberParts[k]);
+                        }
+                    }
+                    //switch(directionalGrid[i, j])
+                    //{
+                    //    //If going down the rows with number facing north
+                    //    //If number must be seen through south direction
+                    //    case 3:
+                    //        for(int k = 0; k < numOfRows; k++)
+                    //        {
+                    //            PillarNumScript[k, j].InsertNumberSprite(directionalGrid[i, j], k);
+                    //        }
+                    //        break;
+                    //        //If number must be seen through east direction
+                    //    case 2:
+                    //        for(int k = 0; k < numOfCols; k++)
+                    //        {
+                    //            PillarNumScript[i, k].InsertNumberSprite(directionalGrid[i, j], k);
+                    //        }
+                    //        break;
+                    //    case 1:
+                    //        for (int k = numOfRows-1; k >= 0; k--)
+                    //        {
+                    //            PillarNumScript[k, j].InsertNumberSprite(directionalGrid[i, j], k);
+                    //        }
+                    //        break;
+                    //    case 4:
+                    //        for (int k = numOfCols-1; k <= 0; k--)
+                    //        {
+                    //            PillarNumScript[i, k].InsertNumberSprite(directionalGrid[i, j], k);
+                    //        }
+                    //        break;
+                    //}
+                    //PillarNumScript[i,j].InsertNumberSprite(directionalGrid[i,j], num3)
                 }
                 
             }

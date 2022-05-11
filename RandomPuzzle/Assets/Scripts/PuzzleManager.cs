@@ -40,7 +40,7 @@ public class PuzzleManager : MonoBehaviour
                 break;
 
         }
-        
+        lengthOfCode = 3;
         //Generate code and code panel
         GenerateCode();
         SpawnCodeBar();
@@ -52,10 +52,13 @@ public class PuzzleManager : MonoBehaviour
     {
         for (int i = 0; i < lengthOfCode; i++)
         {
-            int randNum = Random.Range(1, 9);
+            int randNum = Random.Range(1, 3);
             PuzzleManagement.RequiredCode.Add(randNum);
+            //PuzzleManagement.RequiredCode.Add(3);
             //Debug.Log(randNum);
         }
+
+        
         Debug.Log("lengthOfCode: " + lengthOfCode);
     }
 
