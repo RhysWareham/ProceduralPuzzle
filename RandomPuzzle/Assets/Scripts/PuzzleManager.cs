@@ -50,14 +50,16 @@ public class PuzzleManager : MonoBehaviour
 
     private void GenerateCode()
     {
-        for (int i = 0; i < lengthOfCode; i++)
-        {
-            int randNum = Random.Range(1, 3);
-            PuzzleManagement.RequiredCode.Add(randNum);
-            //PuzzleManagement.RequiredCode.Add(3);
-            //Debug.Log(randNum);
-        }
-
+        //for (int i = 0; i < lengthOfCode; i++)
+        //{
+        //    int randNum = Random.Range(1, 3);
+        //    PuzzleManagement.RequiredCode.Add(randNum);
+        //    //PuzzleManagement.RequiredCode.Add(3);
+        //    //Debug.Log(randNum);
+        //}
+        PuzzleManagement.RequiredCode.Add(1);
+        PuzzleManagement.RequiredCode.Add(2);
+        PuzzleManagement.RequiredCode.Add(1);
         
         Debug.Log("lengthOfCode: " + lengthOfCode);
     }

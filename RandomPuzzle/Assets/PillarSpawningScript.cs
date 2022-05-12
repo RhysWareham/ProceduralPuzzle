@@ -79,15 +79,15 @@ public class PillarSpawningScript : MonoBehaviour
                 break;
             case PuzzleManagement.Difficulty.HARD:
                 numOfRows = Random.Range(3, 6);
-                numOfCols = Random.Range(4, 7);
+                numOfCols = Random.Range(4, 8);
                 break;
             default:
                 numOfRows = 3;
                 numOfCols = 3;
                 break;
         }
-        numOfRows = 3;
-        numOfCols = 3;
+        numOfRows = 7;
+        numOfCols = 7;
         Debug.Log("num of rows: " + numOfRows);
         Debug.Log("num of cols: " + numOfCols);
     }
