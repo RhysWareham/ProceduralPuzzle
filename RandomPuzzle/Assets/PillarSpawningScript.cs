@@ -465,11 +465,11 @@ public class PillarSpawningScript : MonoBehaviour
             {
                 if(directionalGrid[i, j] != 0)
                 {
-                    idk++;
-                    if(idk == PuzzleManagement.RequiredCode.Count)
-                    {
-                        Debug.Log("Last number");
-                    }
+                    //idk++;
+                    //if(idk == PuzzleManagement.RequiredCode.Count)
+                    //{
+                    //    Debug.Log("Last number");
+                    //}
 
                     //If going down the rows with number facing north
                     //If number must be seen through south direction

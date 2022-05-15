@@ -32,11 +32,11 @@ public class CodeBarScript : MonoBehaviour
             int halfCount = PuzzleManagement.RequiredCode.Count / 2;
             if (halfCount != 1)
             {
-                startSpawnPointX = slotSpawnPoint.position.x - slotOffset - (slotSpacing.x * (halfCount-1));
+                startSpawnPointX = slotSpawnPoint.localPosition.x - slotOffset - (slotSpacing.x * (halfCount-1));
             }
             else
             {
-                startSpawnPointX = slotSpawnPoint.position.x - slotOffset;
+                startSpawnPointX = slotSpawnPoint.localPosition.x - slotOffset;
             }
 
         }
@@ -45,12 +45,12 @@ public class CodeBarScript : MonoBehaviour
             
             int halfCount = (PuzzleManagement.RequiredCode.Count - 1) / 2;
             //float startSpawnPointX;
-            startSpawnPointX = slotSpawnPoint.position.x - (slotSpacing.x * halfCount);
+            startSpawnPointX = slotSpawnPoint.localPosition.x - (slotSpacing.x * halfCount);
         }
 
         Vector3 spawnPointOffset = Vector3.zero;
         spawnPointOffset.x = startSpawnPointX;
-        Vector3 spawnPoint = slotSpawnPoint.position + spawnPointOffset;
+        Vector3 spawnPoint = slotSpawnPoint.localPosition + spawnPointOffset;
         spawnPoint = new Vector3(spawnPoint.x, 0, -0.6f);
 
         for (int i = 0; i < PuzzleManagement.RequiredCode.Count; i++)
