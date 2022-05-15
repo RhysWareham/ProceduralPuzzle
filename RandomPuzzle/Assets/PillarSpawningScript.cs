@@ -376,6 +376,8 @@ public class PillarSpawningScript : MonoBehaviour
                     PillarNumScript[i, j] = pillarPos.GetComponent<PillarNumberScript>();
                 }
 
+                //Randomise rotation of pillar
+                RotatePillar(PillarNumScript[i, j].transform);
             }
         }
         //Vector3 startSpawnPoint = this.transform.position + 
@@ -383,7 +385,11 @@ public class PillarSpawningScript : MonoBehaviour
         //pillarPos.transform.position = startSpawnOffset;
     }
     
-    
+    private void RotatePillar(Transform pillar)
+    {
+        Quaternion target = Quaternion.Euler(0, Random.Range(0,4) * 90f, 0);
+        pillar.transform.rotation = target;
+    }
 
     public void SplitNum(WholeNumberParts numPartsPrefab, int availablePillars)
     {
