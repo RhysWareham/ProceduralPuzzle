@@ -33,14 +33,14 @@ public class PuzzleManager : MonoBehaviour
                 lengthOfCode = Random.Range(2, 5);
                 break;
             case PuzzleManagement.Difficulty.MEDIUM:
-                lengthOfCode = Random.Range(4, 8);
+                lengthOfCode = Random.Range(4, 7);
                 break;
             case PuzzleManagement.Difficulty.HARD:
                 lengthOfCode = Random.Range(5, 9);
                 break;
 
         }
-        lengthOfCode = 3;
+        //lengthOfCode = 3;
         //Generate code and code panel
         GenerateCode();
         SpawnCodeBar();
@@ -50,16 +50,16 @@ public class PuzzleManager : MonoBehaviour
 
     private void GenerateCode()
     {
-        //for (int i = 0; i < lengthOfCode; i++)
-        //{
-        //    int randNum = Random.Range(1, 3);
-        //    PuzzleManagement.RequiredCode.Add(randNum);
-        //    //PuzzleManagement.RequiredCode.Add(3);
-        //    //Debug.Log(randNum);
-        //}
-        PuzzleManagement.RequiredCode.Add(1);
-        PuzzleManagement.RequiredCode.Add(2);
-        PuzzleManagement.RequiredCode.Add(1);
+        for (int i = 0; i < lengthOfCode; i++)
+        {
+            int randNum = Random.Range(1, 10);
+            PuzzleManagement.RequiredCode.Add(randNum);
+            //PuzzleManagement.RequiredCode.Add(3);
+            //Debug.Log(randNum);
+        }
+        //PuzzleManagement.RequiredCode.Add(1);
+        //PuzzleManagement.RequiredCode.Add(2);
+        //PuzzleManagement.RequiredCode.Add(1);
         
         Debug.Log("lengthOfCode: " + lengthOfCode);
     }

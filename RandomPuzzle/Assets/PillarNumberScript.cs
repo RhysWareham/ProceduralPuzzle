@@ -5,10 +5,10 @@ using UnityEngine;
 public class PillarNumberScript : MonoBehaviour
 {
     [SerializeField] private bool isTwoWay;
-    [SerializeField] private SpriteRenderer northViewNum;
-    [SerializeField] private SpriteRenderer southViewNum;
-    [SerializeField] private SpriteRenderer eastViewNum;
-    [SerializeField] private SpriteRenderer westViewNum;
+    [SerializeField] private List<SpriteRenderer> northViewNumList;
+    [SerializeField] private List<SpriteRenderer> southViewNumList;
+    [SerializeField] private List<SpriteRenderer> eastViewNumList;
+    [SerializeField] private List<SpriteRenderer> westViewNumList;
     //[SerializeField] private Transform quad;
 
     //private List<Sprite> numParts = new List<Sprite>();
@@ -35,35 +35,35 @@ public class PillarNumberScript : MonoBehaviour
     //}
 
     //public void DetermineHowMuchOfEachNumber(int numOfAvailablePillars, )
-    public void InsertNumberSprite(int direction, int numOfAvailablePillars, SpriteRenderer numPart)
+    public void InsertNumberSprite(int direction, int pillarNumSlot, SpriteRenderer numPart)
     {
 
         switch(direction)
             {
                 case 1:
-                    northViewNum.sprite = numPart.sprite;
+                    northViewNumList[pillarNumSlot].sprite = numPart.sprite;
                     break;                
                 case 2:                   
                     if(isTwoWay)
                     {
-                        northViewNum.sprite = numPart.sprite;
+                        northViewNumList[pillarNumSlot].sprite = numPart.sprite;
                     }
                     else
                     {
-                        eastViewNum.sprite = numPart.sprite;
+                        eastViewNumList[pillarNumSlot].sprite = numPart.sprite;
                     }
                     break;                
                 case 3:                   
-                    southViewNum.sprite = numPart.sprite;
+                    southViewNumList[pillarNumSlot].sprite = numPart.sprite;
                     break;                
                 case 4:
                     if (isTwoWay)
                     {
-                        southViewNum.sprite = numPart.sprite;
+                        southViewNumList[pillarNumSlot].sprite = numPart.sprite;
                     }
                     else
                     {
-                        westViewNum.sprite = numPart.sprite;
+                        westViewNumList[pillarNumSlot].sprite = numPart.sprite;
                     }
                         break;
                 default:

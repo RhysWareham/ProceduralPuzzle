@@ -34,7 +34,7 @@ public class PillarSpawningScript : MonoBehaviour
     [SerializeField] private GameObject num3;
     [SerializeField] private List<SpriteRenderer> thisNumberParts = new List<SpriteRenderer>();
     [SerializeField] private List<WholeNumberParts> allWholeNumbers = new List<WholeNumberParts>();
-
+    private List<int> numOfPartsInEachPillar = new List<int>();
     private void Awake()
     {
         numOfCodeNeeded = PuzzleManagement.RequiredCode.Count;
@@ -86,8 +86,8 @@ public class PillarSpawningScript : MonoBehaviour
                 numOfCols = 3;
                 break;
         }
-        numOfRows = 7;
-        numOfCols = 7;
+        //numOfRows = 7;
+        //numOfCols = 3;
         Debug.Log("num of rows: " + numOfRows);
         Debug.Log("num of cols: " + numOfCols);
     }
@@ -382,53 +382,123 @@ public class PillarSpawningScript : MonoBehaviour
         //GameObject pillarPos = Instantiate(twoWayPillarPrefab, this.transform);
         //pillarPos.transform.position = startSpawnOffset;
     }
+    
+    
 
-    public void SplitNum(WholeNumberParts numPartsPrefab)
+    public void SplitNum(WholeNumberParts numPartsPrefab, int availablePillars)
     {
+        numOfPartsInEachPillar.Clear();
         thisNumberParts = numPartsPrefab.numParts;
-        //if(thisNumberParts.Count > //availablePillars)
-        //{
-        //    //Share them out
-        //}
-        //Could shuffle before this
+
 
         //Shuffle the parts up here
-        //SpriteRenderer[] numPartsArray = numPartsPrefab.numParts;
-        //for (int i = 0; i < numPartsArray.Length; i++)
+        UsefulFunctions.Shuffle(thisNumberParts);
+        
+
+        //int availablePillars = numOfRows;
+        //List<SpriteRenderer> thisPillarNumParts = new List<SpriteRenderer> ();
+        //List<int> numOfPartsInEachPillar = new List<int>();
+        int j = 0;
+        for(int i = 0; i < thisNumberParts.Count; i++)
+        {
+            if(numOfPartsInEachPillar.Count != availablePillars)
+            {
+                numOfPartsInEachPillar.Add(1);
+            }
+            else
+            {
+                if(j == availablePillars)
+                {
+                    j = 0;
+                }
+                numOfPartsInEachPillar[j] += 1;
+                j++;
+            }
+        }
+        UsefulFunctions.Shuffle(numOfPartsInEachPillar);
+
+        //if (thisNumberParts.Count > availablePillars)
         //{
-        //    thisNumberParts.Add(thi[i].sprite);
+        //    //If can be evenly split - which it will never be able to be
+        //    if(thisNumberParts.Count % availablePillars == 0)
+        //    {
+
+        //    }
+
+        //    if(thisNumberParts.Count-1 % availablePillars == 0)
+        //    {
+
+        //    }
+
+        //    //If even number of pillars
+        //    if(availablePillars % 2 == 0)
+        //    {
+
+        //    }
+
+        //    int extraParts = thisNumberParts.Count - availablePillars;
+        //    for (int i = 0; i < thisNumberParts.Count; i++)
+        //    {
+        //        //int thisPillar = Random.Range(0, 9);
+        //        numOfPartsInThisPillar[i] = 1;
+        //    }
         //}
     }
+
+
     public void DetermineHowMuchOfEachNumber(int numOfAvailablePillars )
     {
 
     }
     private void CheckDirectionForNumber()
     {
+        int idk = 0;
         for( int i = 0; i < numOfRows; i++)
         {
             for (int j = 0; j < numOfCols; j++)
             {
                 if(directionalGrid[i, j] != 0)
                 {
-                    //Separates number prefab into separate sprites
-                    ///Next will split into even amounts
-                    SplitNum(allWholeNumbers[codeGrid[i,j]-1]);
+                    idk++;
+                    if(idk == PuzzleManagement.RequiredCode.Count)
+                    {
+                        Debug.Log("Last number");
+                    }
 
                     //If going down the rows with number facing north
                     //If number must be seen through south direction
                     if (directionalGrid[i, j] == 1 || directionalGrid[i,j] == 3)
                     {
+                        //Separates number prefab into separate sprites
+                        ///Next will split into even amounts
+                        SplitNum(allWholeNumbers[codeGrid[i, j] - 1], numOfRows);
+                        int numberPart =0;
                         for (int k = 0; k < numOfRows; k++)
                         {
-                            PillarNumScript[k, j].InsertNumberSprite(directionalGrid[i, j], numOfRows, thisNumberParts[k]);
+                            for(int l = 0; l < numOfPartsInEachPillar[k]; l++)
+                            {
+                                PillarNumScript[k, j].InsertNumberSprite(directionalGrid[i, j], l, thisNumberParts[numberPart]);
+                                numberPart++;
+
+                            }
+                            //PillarNumScript[k, j].InsertNumberSprite(directionalGrid[i, j], numOfRows, thisNumberParts[k]);
+
                         }
                     }
                     else
                     {
+                        //Separates number prefab into separate sprites
+                        ///Next will split into even amounts
+                        SplitNum(allWholeNumbers[codeGrid[i, j] - 1], numOfCols);
+                        int numberPart = 0;
                         for (int k = 0; k < numOfCols; k++)
                         {
-                            PillarNumScript[i, k].InsertNumberSprite(directionalGrid[i, j], numOfCols, thisNumberParts[k]);
+                            for (int l = 0; l < numOfPartsInEachPillar[k]; l++)
+                            {
+                                PillarNumScript[i, k].InsertNumberSprite(directionalGrid[i, j], l, thisNumberParts[numberPart]);
+                                numberPart++;
+
+                            }
                         }
                     }
                     //switch(directionalGrid[i, j])
