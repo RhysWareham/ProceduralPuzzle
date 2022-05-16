@@ -5,6 +5,7 @@ using UnityEngine;
 public static class PuzzleManagement
 {
     public static List<int> RequiredCode = new List<int>();
+    public static List<int> ShuffledOrder = new List<int>();
     public enum Difficulty
     {
         EASY,

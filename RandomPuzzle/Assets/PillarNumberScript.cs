@@ -9,6 +9,8 @@ public class PillarNumberScript : MonoBehaviour
     [SerializeField] private List<SpriteRenderer> southViewNumList;
     [SerializeField] private List<SpriteRenderer> eastViewNumList;
     [SerializeField] private List<SpriteRenderer> westViewNumList;
+    [SerializeField] private SpriteRenderer numInCode;
+    [SerializeField] private List<Sprite> numbers;
     //[SerializeField] private Transform quad;
 
     //private List<Sprite> numParts = new List<Sprite>();
@@ -25,6 +27,29 @@ public class PillarNumberScript : MonoBehaviour
         
     }
 
+    public void SpawnNumberInSequence(int numInSequence)
+    {
+        numInCode.sprite = numbers[numInSequence];
+    }
+
+    public int WorkOutNumberInCodeSequence(int thisNumber)
+    {
+        for (int i = 0; i < PuzzleManagement.RequiredCode.Count; i++)
+        {
+            if(thisNumber == PuzzleManagement.RequiredCode[i])
+            {
+                
+                //If the number is already in the order, continue for loop to increase index
+                if(PuzzleManagement.ShuffledOrder.Count == 0 || PuzzleManagement.ShuffledOrder[PuzzleManagement.ShuffledOrder.Count-1] != i)
+                {
+                    PuzzleManagement.ShuffledOrder.Add(i); //number 5 is the first in Order
+                    return i;
+                }
+                
+            }
+        }
+        return 100;
+    }
 
     //public void DetermineHowMuchOfEachNumber(int numOfAvailablePillars, )
     public void InsertNumberSprite(int direction, int pillarNumSlot, SpriteRenderer numPart)

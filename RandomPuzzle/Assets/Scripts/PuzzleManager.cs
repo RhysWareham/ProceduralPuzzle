@@ -37,6 +37,7 @@ public class PuzzleManager : MonoBehaviour
 
         //Clear the previous code
         PuzzleManagement.RequiredCode.Clear();
+        PuzzleManagement.ShuffledOrder.Clear();
 
         codeBar.RestartCodeBar();
 
