@@ -25,14 +25,6 @@ public class PillarNumberScript : MonoBehaviour
         
     }
 
-    //public void SplitNum(GameObject numPartsPrefab)
-    //{
-    //    SpriteRenderer[] numPartsArray = numPartsPrefab.GetComponentsInChildren<SpriteRenderer>();
-    //    for (int i = 0; i < numPartsArray.Length; i++)
-    //    {
-    //        numParts.Add(numPartsArray[i].sprite);
-    //    }
-    //}
 
     //public void DetermineHowMuchOfEachNumber(int numOfAvailablePillars, )
     public void InsertNumberSprite(int direction, int pillarNumSlot, SpriteRenderer numPart)

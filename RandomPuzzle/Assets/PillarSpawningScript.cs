@@ -64,6 +64,20 @@ public class PillarSpawningScript : MonoBehaviour
         CheckDirectionForNumber();
     }
 
+    /// <summary>
+    /// Function to destroy all pillars at end of level
+    /// </summary>
+    public void DestroyAllPillars()
+    {
+        for(int i = 0; i < numOfRows; i++)
+        {
+            for(int j = 0; j < numOfCols; j++)
+            {
+                Destroy(PillarNumScript[i, j].gameObject);
+            }
+        }
+    }
+
     private void SetNumOfRowCols()
     {
         
@@ -458,7 +472,7 @@ public class PillarSpawningScript : MonoBehaviour
     }
     private void CheckDirectionForNumber()
     {
-        int idk = 0;
+        //int idk = 0;
         for( int i = 0; i < numOfRows; i++)
         {
             for (int j = 0; j < numOfCols; j++)

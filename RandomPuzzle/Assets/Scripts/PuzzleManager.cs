@@ -5,16 +5,23 @@ using UnityEngine;
 public class PuzzleManager : MonoBehaviour
 {
     private int lengthOfCode;
-    [SerializeField] private GameObject codeBarPrefab;
+    [SerializeField] private GameObject keyCodePanelPrefab;
     [SerializeField] private Transform codePanelPos;
+    private CodeBarScript codeBar;
     [SerializeField] private PuzzleManagement.Difficulty difficulty;
     [SerializeField] private GameObject pillarSpawnerPrefab;
     [SerializeField] private Transform pillarSpawnPos;
+    private PillarSpawningScript pillarSpawner;
+
+    [SerializeField] private DoorControl door;
+    [SerializeField] private DoorControl backDoor;
+    [SerializeField] private List<DifficultySelector> buttons = new List<DifficultySelector>();
+    private bool firstTime = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        CreatePuzzle();
+        //CreatePuzzle();
     }
 
     // Update is called once per frame
@@ -23,9 +30,32 @@ public class PuzzleManager : MonoBehaviour
         
     }
 
-    private void CreatePuzzle()
+    public void Restart()
     {
-        PuzzleManagement.ChosenDifficulty = difficulty;
+        pillarSpawner.DestroyAllPillars();
+        Destroy(pillarSpawner);
+
+        //Clear the previous code
+        PuzzleManagement.RequiredCode.Clear();
+
+        codeBar.RestartCodeBar();
+
+        foreach (DifficultySelector button in buttons)
+        {
+            button.gameObject.SetActive(true);
+        }
+    }
+
+    public void CreatePuzzle(int inputDifficulty)
+    {
+        ShutBackDoor();
+
+        foreach(DifficultySelector button in buttons)
+        {
+            button.gameObject.SetActive(false);
+        }
+
+        PuzzleManagement.ChosenDifficulty = (PuzzleManagement.Difficulty)inputDifficulty;
 
         switch (PuzzleManagement.ChosenDifficulty)
         {
@@ -43,7 +73,15 @@ public class PuzzleManager : MonoBehaviour
         //lengthOfCode = 3;
         //Generate code and code panel
         GenerateCode();
-        SpawnCodeBar();
+        if(firstTime)
+        {
+            SpawnCodeBar();
+            firstTime = false;
+        }
+        else
+        {
+            codeBar.SpawnCodeBarSlots();
+        }
 
         SpawnPillarCreator();
     }
@@ -66,11 +104,21 @@ public class PuzzleManager : MonoBehaviour
 
     private void SpawnCodeBar()
     {
-        Instantiate(codeBarPrefab, codePanelPos);
+        codeBar = Instantiate(keyCodePanelPrefab, codePanelPos).GetComponentInChildren<CodeBarScript>();
     }
 
     private void SpawnPillarCreator()
     {
-        Instantiate(pillarSpawnerPrefab, pillarSpawnPos);
+        pillarSpawner = Instantiate(pillarSpawnerPrefab, pillarSpawnPos).GetComponent<PillarSpawningScript>();
+    }
+    
+    public void ActivateDoor()
+    {
+        door.Unlock();
+    }
+
+    public void ShutBackDoor()
+    {
+        backDoor.Lock();
     }
 }
