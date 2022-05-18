@@ -2695,6 +2695,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   difficulty: 2
   manager: {fileID: 2136770389}
+  hiddenYValue: -8
+  visibleYValue: 1.17
 --- !u!65 &552189068
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3588,6 +3590,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   difficulty: 1
   manager: {fileID: 2136770389}
+  hiddenYValue: -8
+  visibleYValue: 1.17
 --- !u!65 &930629269
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5454,6 +5458,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   difficulty: 0
   manager: {fileID: 2136770389}
+  hiddenYValue: -8
+  visibleYValue: 1.17
 --- !u!1 &1694266003
 GameObject:
   m_ObjectHideFlags: 0
@@ -6651,9 +6657,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keyCodePanelPrefab: {fileID: 3745091214709970487, guid: ac93c8d9ffdb85d49b199176cc2f94f8, type: 3}
   codePanelPos: {fileID: 1505372516}
-  difficulty: 0
   pillarSpawnerPrefab: {fileID: 6515755911186670352, guid: bbee9b10808261f4da023f3b9856a547, type: 3}
   pillarSpawnPos: {fileID: 77448733}
+  pillarRisingSpeed: 5
   door: {fileID: 92578934}
   backDoor: {fileID: 1894912037}
   buttons:

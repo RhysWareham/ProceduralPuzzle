@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour
 {
     public Camera playerCamera;
     private PlayerInput inputHandler;
-    private 
 
     // Start is called before the first frame update
     void Start()

@@ -12,40 +12,47 @@ public class DoorControl : MonoBehaviour
 
     private Coroutine currentCoroutine;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    /// <summary>
+    /// Function to unlock the door
+    /// </summary>
     public void Unlock()
     {
+        //If the coroutine is running, stop it
         if (CheckCoroutineRunning())
         {
             StopCoroutine(currentCoroutine);
+            //Set position of door to locked position
             this.transform.position = lockedPos.position;
         }
+
+        //Start coroutine to move the door to unlocked position
         doorMoveSpeed = doorUnlockSpeed;
         currentCoroutine = StartCoroutine(MoveDoor(unlockedPos));
     }
 
+    /// <summary>
+    /// Function to lock the door
+    /// </summary>
     public void Lock()
     {
-        if(CheckCoroutineRunning())
+        //If the coroutine is running, stop it
+        if (CheckCoroutineRunning())
         {
             StopCoroutine(currentCoroutine);
+            //Set position of door to unlocked position
             this.transform.position = unlockedPos.position;
         }
+
+        //Start coroutine to move the door to locked position
         doorMoveSpeed = doorLockSpeed;
         currentCoroutine = StartCoroutine(MoveDoor(lockedPos));
     }
 
+    /// <summary>
+    /// Function checking if coroutine is running
+    /// </summary>
+    /// <returns></returns>
     private bool CheckCoroutineRunning()
     {
         if(currentCoroutine != null)
@@ -55,11 +62,17 @@ public class DoorControl : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Coroutine to move door to given position
+    /// </summary>
+    /// <param name="targetTransform"></param>
+    /// <returns></returns>
     private IEnumerator MoveDoor(Transform targetTransform)
     {
-
+        //Set the target position
         Vector3 targetPos = targetTransform.position;
 
+        //While the door is not at the target position, move the door
         while (this.transform.position != targetPos)
         {
             this.transform.position = Vector3.Slerp(this.transform.position, targetPos, Time.deltaTime * doorMoveSpeed);

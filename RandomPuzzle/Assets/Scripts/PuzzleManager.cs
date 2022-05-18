@@ -8,27 +8,18 @@ public class PuzzleManager : MonoBehaviour
     [SerializeField] private GameObject keyCodePanelPrefab;
     [SerializeField] private Transform codePanelPos;
     private CodeBarScript codeBar;
-    [SerializeField] private PuzzleManagement.Difficulty difficulty;
+    //[SerializeField] private PuzzleManagement.Difficulty difficulty;
     [SerializeField] private GameObject pillarSpawnerPrefab;
     [SerializeField] private Transform pillarSpawnPos;
     private PillarSpawningScript pillarSpawner;
+    [SerializeField] private float pillarRisingSpeed;
 
     [SerializeField] private DoorControl door;
     [SerializeField] private DoorControl backDoor;
     [SerializeField] private List<DifficultySelector> buttons = new List<DifficultySelector>();
     private bool firstTime = true;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        //CreatePuzzle();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    private Coroutine pillarMovingCoroutine;
     
     /// <summary>
     /// Function to reset the puzzle room
@@ -45,11 +36,18 @@ public class PuzzleManager : MonoBehaviour
         //Restart the code bar
         codeBar.RestartCodeBar();
 
-        //Make difficulty selection visible
+        //Stop coroutine if running
+        if(pillarMovingCoroutine != null)
+        {
+            StopCoroutine(pillarMovingCoroutine);
+        }
+
+        //Make all difficulty buttons visible
         foreach (DifficultySelector button in buttons)
         {
-            button.gameObject.SetActive(true);
+            button.MoveButton(true);
         }
+
     }
 
     /// <summary>
@@ -61,10 +59,10 @@ public class PuzzleManager : MonoBehaviour
         //Shut the back door behind player
         ShutBackDoor();
 
-        //Deactivate all difficulty buttons
+        //Hide all difficulty buttons
         foreach(DifficultySelector button in buttons)
         {
-            button.gameObject.SetActive(false);
+            button.MoveButton(false);
         }
 
         //Set the chosen difficulty
@@ -102,6 +100,27 @@ public class PuzzleManager : MonoBehaviour
 
         //Spawn the pillar creator
         SpawnPillarCreator();
+
+        //Raise the pillars
+        pillarMovingCoroutine = StartCoroutine(MovePillars());
+    }
+
+    /// <summary>
+    /// Coroutine to move raise the pillars through the ground
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator MovePillars()
+    {
+        //Set pillars to be below the ground on start
+        pillarSpawner.transform.position = new Vector3(0, -8, 0);
+
+        //While pillar spawner position is has not reached 0, raise the spawner
+        while(pillarSpawner.transform.position != Vector3.zero)
+        {
+            pillarSpawner.transform.position = Vector3.Slerp(pillarSpawner.transform.position, Vector3.zero, Time.deltaTime * pillarRisingSpeed);
+
+            yield return 0;
+        }
     }
 
     /// <summary>

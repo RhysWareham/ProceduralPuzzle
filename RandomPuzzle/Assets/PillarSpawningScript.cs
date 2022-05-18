@@ -28,12 +28,12 @@ public class PillarSpawningScript : MonoBehaviour
 
     private PillarNumberScript[,] PillarNumScript;
 
-    [SerializeField] private int maxNumParts = 7;
     [SerializeField] private GameObject num3;
     [SerializeField] private List<SpriteRenderer> thisNumberParts = new List<SpriteRenderer>();
     [SerializeField] private List<WholeNumberParts> allWholeNumbers = new List<WholeNumberParts>();
     private List<int> numOfPartsInEachPillar = new List<int>();
     private List<int> SpreadCodeLayout = new List<int>();
+
 
     /// <summary>
     /// On creation of this script
@@ -81,23 +81,11 @@ public class PillarSpawningScript : MonoBehaviour
 
         //Spawn all pillars
         SpawnPillars();
+
+        //Check direction numbers should be spread out across
         CheckDirectionForNumber();
     }
 
-    /// <summary>
-    /// Destroy all pillars at end of level
-    /// </summary>
-    private void OnDestroy()
-    {
-        //Loop through all pillars in grid, and destroy them
-        for (int i = 0; i < numOfRows; i++)
-        {
-            for (int j = 0; j < numOfCols; j++)
-            {
-                Destroy(PillarNumScript[i, j].gameObject);
-            }
-        }
-    }
 
     /// <summary>
     /// Set the number of rows and collumns for this instance of the puzzle
@@ -130,6 +118,7 @@ public class PillarSpawningScript : MonoBehaviour
         Debug.Log("num of cols: " + numOfCols);
     }
 
+
     /// <summary>
     /// Function to fill code grid array with code values
     /// </summary>
@@ -137,6 +126,7 @@ public class PillarSpawningScript : MonoBehaviour
     {
         int codeNumsInGrid = 0;
         
+        //Set the number of valid spaces, not allowing two numbers to start on same pillar
         int numOfValidSpaces = (numOfCols * 2) + (numOfRows * 2) - 4;
         int spacesLeft = numOfValidSpaces;
 
@@ -230,7 +220,6 @@ public class PillarSpawningScript : MonoBehaviour
                         }
                         Debug.Log("Index " + i + "," + j + "= " + codeGrid[i, j] + " going " + (Directions)directionalGrid[i, j]);
 
-
                         //Continue to next array index
                         continue;
                     }
@@ -281,7 +270,6 @@ public class PillarSpawningScript : MonoBehaviour
                         }
                         Debug.Log("Index " + i + "," + j + "= " + codeGrid[i, j] + " going " + (Directions)directionalGrid[i, j]);
 
-
                         //Continue to next array index
                         continue;
                     }
@@ -294,7 +282,6 @@ public class PillarSpawningScript : MonoBehaviour
                         AddNumberofNumsOnPillar(false, i);
                         Debug.Log("Index " + i + "," + j + "= " + codeGrid[i, j] + " going " + (Directions)directionalGrid[i, j]);
 
-
                         continue;
                     }
 
@@ -305,7 +292,6 @@ public class PillarSpawningScript : MonoBehaviour
                         directionalGrid[i, j] = 4;
                         AddNumberofNumsOnPillar(false, i);
                         Debug.Log("Index " + i + "," + j + "= " + codeGrid[i, j] + " going " + (Directions)directionalGrid[i, j]);
-
 
                         continue;
                     }
@@ -318,8 +304,9 @@ public class PillarSpawningScript : MonoBehaviour
         
     }
 
+
     /// <summary>
-    /// Function for adding the amount of numbers on a single pillar
+    /// Function for adding up the amount of numbers on a single pillar
     /// </summary>
     /// <param name="vertical"></param>
     /// <param name="currentIndex"></param>
@@ -347,6 +334,7 @@ public class PillarSpawningScript : MonoBehaviour
         }
     }
 
+
     /// <summary>
     /// Function to spawn all pillars in correct positions
     /// </summary>
@@ -355,67 +343,31 @@ public class PillarSpawningScript : MonoBehaviour
         float startSpawnX = 0;
         float startSpawnZ = 0;
 
-        //If numOfCols is even
-        if(numOfCols % 2 == 0)
-        {
-            int halfCountCols = numOfCols / 2;
+        //Work out the X axis spawn value
+        startSpawnX = UsefulFunctions.WorkOutStartSpawnValue(spawnOffset, pillarSpacing, numOfCols, this.transform.position.x);
+        startSpawnZ = UsefulFunctions.WorkOutStartSpawnValue(-spawnOffset, -pillarSpacing, numOfRows, this.transform.position.z);
 
-            //If half Cols is not 1
-            if(halfCountCols != 1)
-            {
-                startSpawnX = this.transform.position.x - spawnOffset - (pillarSpacing * (halfCountCols - 1));
-            }
-            else
-            {
-                startSpawnX = this.transform.position.x - spawnOffset;
-            }
-        }
-        else
-        {
-            int halfCountCols = (numOfCols - 1) / 2;
-            startSpawnX = this.transform.position.x - (pillarSpacing * (halfCountCols));
-        }
-
-
-        //If numOfRows is even
-        if (numOfRows % 2 == 0)
-        {
-            int halfCountRows = numOfRows / 2;
-            //If half Rows is not 1
-            if (halfCountRows != 1)
-            {
-                startSpawnZ = this.transform.position.z + spawnOffset + (pillarSpacing * (halfCountRows - 1));
-            }
-            else
-            {
-                startSpawnZ = this.transform.position.z + spawnOffset;
-            }
-        }
-        //If odd
-        else
-        {
-            int halfCountRows = (numOfRows - 1) / 2;
-            startSpawnZ = this.transform.position.z + (pillarSpacing * (halfCountRows));
-        }
-
+        //Create the startSpawnPoint's offset using the x and z values
         Vector3 startSpawnOffset = new Vector3(startSpawnX, 0, startSpawnZ);
 
+        //Loop through all positions in grid
         for(int i = 0; i < numOfRows; i++)
         {
             for(int j = 0; j < numOfCols; j++)
             {
                 //If numbers on pillar is less than or equal to 1
-                ///This doesn't take into account if the other direction is at a 90 degree angle, 
-                ///so changed it to if atleast 2 directions then it will be four way
-                ///Could just check if vertical or horizontal to add?
+                //Meaning either 0 or 1 number pass through it
                 if(numOfDirectionGrid[i, j] <= 1)
                 {
                     //Spawn a 2 way pillar
                     GameObject pillarPos = Instantiate(twoWayPillarPrefab, this.transform);
+                    //Set the position of the pillar correctly
                     pillarPos.transform.position = startSpawnOffset + new Vector3(pillarSpacing * j, 0, -pillarSpacing * i);
+                    //Keep track of the pillar by storing in an array
                     PillarNumScript[i,j] = pillarPos.GetComponent<PillarNumberScript>();
 
                 }
+                //If more than 1 number passes through the pillar
                 else
                 {
                     //Spawn a 4 way pillar
@@ -424,139 +376,178 @@ public class PillarSpawningScript : MonoBehaviour
                     PillarNumScript[i, j] = pillarPos.GetComponent<PillarNumberScript>();
                 }
 
-                //Randomise rotation of pillar
+                //Randomise rotation of pillar so the numbers are not already aligned
                 RotatePillar(PillarNumScript[i, j].transform);
             }
         }
-        //Vector3 startSpawnPoint = this.transform.position + 
-        //GameObject pillarPos = Instantiate(twoWayPillarPrefab, this.transform);
-        //pillarPos.transform.position = startSpawnOffset;
     }
     
+
+    /// <summary>
+    /// Function rotating the pillar a random amount
+    /// </summary>
+    /// <param name="pillar"></param>
     private void RotatePillar(Transform pillar)
     {
+        //Create a target rotation with random multiple of 90 in Y value
         Quaternion target = Quaternion.Euler(0, Random.Range(0,4) * 90f, 0);
+        //Set the pillar's rotation
         pillar.transform.rotation = target;
     }
 
-    public void SplitNum(WholeNumberParts numPartsPrefab, int availablePillars)
+
+    /// <summary>
+    /// Function to check which directions the numbers must be spread across pillars
+    /// </summary>
+    private void CheckDirectionForNumber()
     {
-        numOfPartsInEachPillar.Clear();
-        thisNumberParts = numPartsPrefab.numParts;
-
-
-        //Shuffle the parts up here
-        UsefulFunctions.Shuffle(thisNumberParts);
-        
-
-        //int availablePillars = numOfRows;
-        //List<SpriteRenderer> thisPillarNumParts = new List<SpriteRenderer> ();
-        //List<int> numOfPartsInEachPillar = new List<int>();
-        int j = 0;
-        for(int i = 0; i < thisNumberParts.Count; i++)
+        //Loop through the directionalGrid
+        for( int i = 0; i < numOfRows; i++)
         {
-            if(numOfPartsInEachPillar.Count != availablePillars)
+            for (int j = 0; j < numOfCols; j++)
             {
-                numOfPartsInEachPillar.Add(1);
-            }
-            else
-            {
-                if(j == availablePillars)
+                //If this index in directionalGrid is not 0
+                //There is a number in this pillar
+                if (directionalGrid[i, j] != 0)
                 {
-                    j = 0;
-                }
-                numOfPartsInEachPillar[j] += 1;
-                j++;
+                    //If number must be seen through north direction or
+                    //if number must be seen through south direction
+                    if (directionalGrid[i, j] == 1 || directionalGrid[i, j] == 3)
+                    {
+                        //Spread the number parts across the rows
+                        SpreadNumberParts(numOfRows, i, j, true);
+                    }
+                    //If seen through east or west direction
+                    else
+                    {
+                        //Spread the number parts across the columns
+                        SpreadNumberParts(numOfCols, i, j, false);
+                    }
+                }                
             }
         }
+    }
+
+
+    /// <summary>
+    /// Splits a number prefab into multiple parts to be distributed
+    /// </summary>
+    /// <param name="numPartsPrefab"></param>
+    /// <param name="availablePillars"></param>
+    public void SplitNum(WholeNumberParts numPartsPrefab, int availablePillars)
+    {
+        //Clear the previous number of parts in each pillar
+        numOfPartsInEachPillar.Clear();
+        //Set this number parts list to the chosen number prefab parts
+        thisNumberParts = numPartsPrefab.numParts;
+
+        //Shuffle the order of number parts up
+        UsefulFunctions.Shuffle(thisNumberParts);
+        
+        int currentPillar = 0;
+        //For i is less than the count of thisNumberParts list
+        for(int i = 0; i < thisNumberParts.Count; i++)
+        {
+            //If the count of pillars is not equal to the number of available pillars in row or column
+            if(numOfPartsInEachPillar.Count != availablePillars)
+            {
+                //Add an instance of 1 to the list
+                numOfPartsInEachPillar.Add(1);
+            }
+            //If the list is as long as the number of available pillars
+            else
+            {
+                //If current pillar value is equal to the amount of available pillars
+                if(currentPillar == availablePillars)
+                {
+                    //Set current pillar back to 0
+                    currentPillar = 0;
+                }
+                //Increase the number of parts on current pillar by 1
+                numOfPartsInEachPillar[currentPillar] += 1;
+                currentPillar++;
+            }
+        }
+
+        //Shuffle the order of parts in pillars, so that the first pillar doesn't always
+        //contain the most parts
         UsefulFunctions.Shuffle(numOfPartsInEachPillar);
 
     }
 
 
-    public void DetermineHowMuchOfEachNumber(int numOfAvailablePillars )
+    /// <summary>
+    /// Function to loop through and spawn the specified amount of parts of the current number in 
+    /// each pillar in the row/column
+    /// </summary>
+    /// <param name="numOfRowsOrCols"></param>
+    /// <param name="i"></param>
+    /// <param name="j"></param>
+    /// <param name="vertical"></param>
+    private void SpreadNumberParts(int numOfRowsOrCols, int i, int j, bool vertical)
     {
+        //Separates number prefab into separate sprites
+        //And spread the parts out across pillars in the line
+        SplitNum(allWholeNumbers[codeGrid[i, j] - 1], numOfRowsOrCols);
 
+        int numberPart = 0;
+        //Loop through the rows
+        for (int k = 0; k < numOfRowsOrCols; k++)
+        {
+            //Loop through number of parts needed in current pillar
+            for (int l = 0; l < numOfPartsInEachPillar[k]; l++)
+            {
+                //If going down the rows
+                if(vertical)
+                {
+                    //Insert the number part sprite into correct view direction on pillar
+                    PillarNumScript[k, j].InsertNumberPartSprite(directionalGrid[i, j], l, thisNumberParts[numberPart]);
+
+                }
+                //If going across the columns
+                else
+                {
+                    //Insert the number part sprite into correct view direction on pillar
+                    PillarNumScript[i, k].InsertNumberPartSprite(directionalGrid[i, j], l, thisNumberParts[numberPart]);
+
+                }
+                numberPart++;
+
+            }
+        }
+
+        //If on hard difficulty, add order numbers to pillars to remove the chance of the player needing
+        //to enter thousands of sequence possibilities from the numbers found in pillars
+        if(PuzzleManagement.ChosenDifficulty == PuzzleManagement.Difficulty.HARD)
+        {
+            //Get the number's position within the code sequence
+            int placeInOrder = PillarNumScript[i, j].WorkOutNumberInCodeSequence(codeGrid[i, j]);
+            if(placeInOrder == 100)
+            {
+                Debug.LogError("Number not found in code");
+                return;
+            }
+
+            //Spawn a sprite on the starting pillar for the number, to state it's order in the code
+            PillarNumScript[i, j].SpawnNumberInSequence(placeInOrder);
+
+        }
     }
-    private void CheckDirectionForNumber()
+
+
+    /// <summary>
+    /// Destroy all pillars at end of level
+    /// </summary>
+    private void OnDestroy()
     {
-        //int idk = 0;
-        for( int i = 0; i < numOfRows; i++)
+        //Loop through all pillars in grid, and destroy them
+        for (int i = 0; i < numOfRows; i++)
         {
             for (int j = 0; j < numOfCols; j++)
             {
-                if (directionalGrid[i, j] != 0)
-                {
-                    //idk++;
-                    //if(idk == PuzzleManagement.RequiredCode.Count)
-                    //{
-                    //    Debug.Log("Last number");
-                    //}
-
-                    //If going down the rows with number facing north
-                    //If number must be seen through south direction
-                    if (directionalGrid[i, j] == 1 || directionalGrid[i, j] == 3)
-                    {
-                        //Separates number prefab into separate sprites
-                        ///Next will split into even amounts
-                        SplitNum(allWholeNumbers[codeGrid[i, j] - 1], numOfRows);
-                        int numberPart = 0;
-                        for (int k = 0; k < numOfRows; k++)
-                        {
-                            for (int l = 0; l < numOfPartsInEachPillar[k]; l++)
-                            {
-                                PillarNumScript[k, j].InsertNumberSprite(directionalGrid[i, j], l, thisNumberParts[numberPart]);
-                                numberPart++;
-
-                            }
-                            //PillarNumScript[k, j].InsertNumberSprite(directionalGrid[i, j], numOfRows, thisNumberParts[k]);
-
-                        }
-                        int placeInOrder = PillarNumScript[i, j].WorkOutNumberInCodeSequence(codeGrid[i, j]);
-                        PillarNumScript[i, j].SpawnNumberInSequence(placeInOrder);
-                    }
-                    else
-                    {
-                        //Separates number prefab into separate sprites
-                        ///Next will split into even amounts
-                        SplitNum(allWholeNumbers[codeGrid[i, j] - 1], numOfCols);
-                        int numberPart = 0;
-                        for (int k = 0; k < numOfCols; k++)
-                        {
-                            for (int l = 0; l < numOfPartsInEachPillar[k]; l++)
-                            {
-                                PillarNumScript[i, k].InsertNumberSprite(directionalGrid[i, j], l, thisNumberParts[numberPart]);
-                                numberPart++;
-
-                            }
-                        }
-                        int placeInOrder = PillarNumScript[i, j].WorkOutNumberInCodeSequence(codeGrid[i, j]);
-                        PillarNumScript[i, j].SpawnNumberInSequence(placeInOrder);
-                    }
-                }
-            
-                
-            }
-        }
-        AttachNumClues();
-    }
-
-    void AttachNumClues()
-    {
-        for(int i = 0; i < numOfRows; i++)
-        {
-            for(int j = 0; j < numOfCols; j++)
-            {
-
+                Destroy(PillarNumScript[i, j].gameObject);
             }
         }
     }
-
-    //private int WorkOutNumberInCodeSequence(int pillarNumber)
-    //    {
-    //        int thisSequencePlace;
-    //    }
-
-    // Start is called before the first frame update
 
 }

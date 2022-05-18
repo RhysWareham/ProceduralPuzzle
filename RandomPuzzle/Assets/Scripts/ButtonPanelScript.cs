@@ -11,11 +11,6 @@ public class ButtonPanelScript : MonoBehaviour
     private bool InRange;
     [SerializeField] private CodeBarScript codeBar;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
@@ -72,6 +67,8 @@ public class ButtonPanelScript : MonoBehaviour
                 if(Input.GetKeyDown(KeyCode.Return))
                 {
                     codeBar.CheckCode();
+                    selectedButton.position = buttonPositions[0].position;
+                    currentButtonPos = 0;
                 }
             }
         }

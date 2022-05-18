@@ -11,86 +11,106 @@ public class PillarNumberScript : MonoBehaviour
     [SerializeField] private List<SpriteRenderer> westViewNumList;
     [SerializeField] private SpriteRenderer numInCode;
     [SerializeField] private List<Sprite> numbers;
-    //[SerializeField] private Transform quad;
 
-    //private List<Sprite> numParts = new List<Sprite>();
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-    
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    /// <summary>
+    /// Spawns the number order sprite on the pillar
+    /// </summary>
+    /// <param name="numInSequence"></param>
     public void SpawnNumberInSequence(int numInSequence)
     {
+        //Spawn a sprite of this number's position in code sequence, on this starting pillar
         numInCode.sprite = numbers[numInSequence];
     }
 
+
+    /// <summary>
+    /// Work out the number's position within the code sequence
+    /// </summary>
+    /// <param name="thisNumber"></param>
+    /// <returns></returns>
     public int WorkOutNumberInCodeSequence(int thisNumber)
     {
+        //Loop through all numbers in the code
         for (int i = 0; i < PuzzleManagement.RequiredCode.Count; i++)
         {
+            //If this number is equal to the value in current index of the code
             if(thisNumber == PuzzleManagement.RequiredCode[i])
             {
-                
-                //If the number is already in the order, continue for loop to increase index
-                if(PuzzleManagement.ShuffledOrder.Count == 0 || PuzzleManagement.ShuffledOrder[PuzzleManagement.ShuffledOrder.Count-1] != i)
+                //If this number is not already in the order list at this index
+                if(PuzzleManagement.ShuffledOrder.Count == 0 || 
+                    PuzzleManagement.ShuffledOrder[PuzzleManagement.ShuffledOrder.Count-1] != i)
                 {
-                    PuzzleManagement.ShuffledOrder.Add(i); //number 5 is the first in Order
+                    //Add the index to the order list
+                    //because i is the position that thisNumber is found within the initial code order
+                    PuzzleManagement.ShuffledOrder.Add(i);
+                    
+                    //Return the index
                     return i;
                 }
                 
             }
         }
+
+        //If number not found in code, return 100
         return 100;
     }
 
-    //public void DetermineHowMuchOfEachNumber(int numOfAvailablePillars, )
-    public void InsertNumberSprite(int direction, int pillarNumSlot, SpriteRenderer numPart)
-    {
 
+    //public void DetermineHowMuchOfEachNumber(int numOfAvailablePillars, )
+    /// <summary>
+    /// Function inserts a given number part sprite into the correct sprite renderer based on direction for view
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <param name="pillarNumPartSlot"></param>
+    /// <param name="numPart"></param>
+    public void InsertNumberPartSprite(int direction, int pillarNumPartSlot, SpriteRenderer numPart)
+    {
+        //Switch based on direction
         switch(direction)
             {
+                //If north view
                 case 1:
-                    northViewNumList[pillarNumSlot].sprite = numPart.sprite;
-                    break;                
-                case 2:                   
+                    //Set one northview number part sprite renderer to be the numPart sprite 
+                    northViewNumList[pillarNumPartSlot].sprite = numPart.sprite;
+                    break;    
+                
+                //If east view
+                case 2:       
+                    //But if pillar is only twoWay, set the northView sprite, because it
+                    //does not contain an east view
                     if(isTwoWay)
                     {
-                        northViewNumList[pillarNumSlot].sprite = numPart.sprite;
+                        northViewNumList[pillarNumPartSlot].sprite = numPart.sprite;
                     }
                     else
                     {
-                        eastViewNumList[pillarNumSlot].sprite = numPart.sprite;
+                        eastViewNumList[pillarNumPartSlot].sprite = numPart.sprite;
                     }
-                    break;                
+                    break;  
+
+                //If south view
                 case 3:                   
-                    southViewNumList[pillarNumSlot].sprite = numPart.sprite;
-                    break;                
+                    southViewNumList[pillarNumPartSlot].sprite = numPart.sprite;
+                    break;   
+                
+                //If west view
                 case 4:
+                    //But if pillar is only twoWay, set the south view sprite, because it
+                    //does not contain an west view    
                     if (isTwoWay)
                     {
-                        southViewNumList[pillarNumSlot].sprite = numPart.sprite;
+                        southViewNumList[pillarNumPartSlot].sprite = numPart.sprite;
                     }
                     else
                     {
-                        westViewNumList[pillarNumSlot].sprite = numPart.sprite;
+                        westViewNumList[pillarNumPartSlot].sprite = numPart.sprite;
                     }
                         break;
                 default:
                     break;
-             
-
             }
-        //Texture tex = numPart.texture;
-        //quad.GetComponent<MeshRenderer>().material.SetTexture("NumberTexture", numPart.texture);
-
+        
         
     }
 }

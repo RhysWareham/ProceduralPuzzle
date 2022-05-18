@@ -55,42 +55,14 @@ public class CodeBarScript : MonoBehaviour
     public void SpawnCodeBarSlots()
     {
         float startSpawnPointX = 0;
-        //If even number of slots are needed
-        if (PuzzleManagement.RequiredCode.Count % 2 == 0)
-        {
-            //Get the half count
-            int halfCount = PuzzleManagement.RequiredCode.Count / 2;
-            //If half count is not 1
-            if (halfCount != 1)
-            {
-                //The start spawn point must subtract the slotOffset and
-                //the slotSpacing multiplied by half of the number of slots needed
-                startSpawnPointX = slotSpawnPoint.localPosition.x - slotOffset - (slotSpacing.x * (halfCount - 1));
-            }
-            //If half count is 1
-            else
-            {
-                //The start spawn point only needs to be offset by the slot offset
-                startSpawnPointX = slotSpawnPoint.localPosition.x - slotOffset;
-            }
+        //Work out the X axis spawn value
+        startSpawnPointX = UsefulFunctions.WorkOutStartSpawnValue(slotOffset, slotSpacing.x, PuzzleManagement.RequiredCode.Count, slotSpawnPoint.localPosition.x);
 
-        }
-        //If the required count is odd but not equal to 1
-        else if (PuzzleManagement.RequiredCode.Count != 1)
-        {
-            //Set the half count
-            int halfCount = (PuzzleManagement.RequiredCode.Count - 1) / 2;
-            //Start spawn point only needs to be offset by the slot spacing multiplied by the half count,
-            //as there will be no slot in the centre of the code bar
-            startSpawnPointX = slotSpawnPoint.localPosition.x - (slotSpacing.x * halfCount);
-        }
-
-        //Create a vector3 of value zero and then set the x value to startSpawnPointX
-        Vector3 spawnPointOffset = Vector3.zero;
-        spawnPointOffset.x = startSpawnPointX;
-        //Set the spawnpoint to be the slotSpawnPoint plus the spawnPointOffset
-        Vector3 spawnPoint = slotSpawnPoint.localPosition + spawnPointOffset;
-        spawnPoint = new Vector3(spawnPoint.x, 0, -0.6f);
+        //Create a vector3 using the x value of startSpawnPointX
+        Vector3 spawnPointOffset = new Vector3(startSpawnPointX, 0, 0);
+        //Set the startSpawnPoint to be the slotSpawnPoint plus the spawnPointOffset
+        Vector3 startSpawnPoint = slotSpawnPoint.localPosition + spawnPointOffset;
+        startSpawnPoint = new Vector3(startSpawnPoint.x, 0, -0.6f);
 
         //Instantiate an emptyfield slot in each position for the correct number of code
         for (int i = 0; i < PuzzleManagement.RequiredCode.Count; i++)
@@ -98,7 +70,7 @@ public class CodeBarScript : MonoBehaviour
             GameObject slotPos = Instantiate(emptyFieldPrefab, slotSpawnPoint.position, Quaternion.identity);
             //Set the parent of the slots to be this transform
             slotPos.transform.SetParent(this.transform);
-            slotPos.transform.localPosition = spawnPoint + (slotSpacing * i);
+            slotPos.transform.localPosition = startSpawnPoint + (slotSpacing * i);
 
             //Add each slot to a list
             enterableSlots.Add(slotPos.transform);
