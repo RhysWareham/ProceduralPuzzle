@@ -4,24 +4,23 @@ using UnityEngine;
 
 public class DifficultySelector : MonoBehaviour
 {
-    [SerializeField] int difficulty;
-    [SerializeField] PuzzleManager manager;
+    [SerializeField] private int difficulty;
+    [SerializeField] private PuzzleManager manager;
     private bool inRange = false;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+
 
     // Update is called once per frame
     void Update()
     {
+        //If in range
         if(inRange)
         {
+            //If enter has been pressed
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 Debug.Log("Pressed");
+                //Call the create puzzle function using specified difficulty
                 manager.CreatePuzzle(difficulty);
             }
 

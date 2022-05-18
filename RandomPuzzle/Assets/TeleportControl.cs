@@ -10,32 +10,32 @@ public class TeleportControl : MonoBehaviour
     [SerializeField] DoorControl backDoor;
     [SerializeField] PuzzleManager puzzleManager;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    /// <summary>
+    /// Lock the exit door on entering the trigger
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
+        //Lock the exit door
         exitDoor.Lock();
         
     }
 
+    /// <summary>
+    /// On exit, teleport player to starting corridor and reset the puzzle room
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerExit(Collider other)
     {
+        //Disable the character controller in order to teleport player, and then reenable
         CharacterController cc = other.GetComponent<CharacterController>();
         cc.enabled = false;
         other.transform.position = new Vector3(other.transform.position.x, other.transform.position.y, other.transform.position.z - teleportDistance);
         cc.enabled = true;
+
         //Call to restart the level generation
-        puzzleManager.Restart();
+        puzzleManager.ResetPuzzle();
         //Unlock the backdoor
         backDoor.Unlock();
     }

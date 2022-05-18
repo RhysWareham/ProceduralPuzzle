@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
 public class PillarSpawningScript : MonoBehaviour
 {
     private int numOfRows;
@@ -36,12 +34,17 @@ public class PillarSpawningScript : MonoBehaviour
     [SerializeField] private List<WholeNumberParts> allWholeNumbers = new List<WholeNumberParts>();
     private List<int> numOfPartsInEachPillar = new List<int>();
     private List<int> SpreadCodeLayout = new List<int>();
+
+    /// <summary>
+    /// On creation of this script
+    /// </summary>
     private void Awake()
     {
+        //Store the length of code
         numOfCodeNeeded = PuzzleManagement.RequiredCode.Count;
 
-        //SpreadCodeLayout = PuzzleManagement.RequiredCode;
-        for(int i = 0; i<PuzzleManagement.RequiredCode.Count;i++)
+        //Add each number in code to a list for spreading out
+        for(int i = 0; i < numOfCodeNeeded; i++)
         {
             SpreadCodeLayout.Add(PuzzleManagement.RequiredCode[i]);
             Debug.Log(PuzzleManagement.RequiredCode[i]);
@@ -51,19 +54,18 @@ public class PillarSpawningScript : MonoBehaviour
         if(PuzzleManagement.ChosenDifficulty == PuzzleManagement.Difficulty.HARD)
         {
             UsefulFunctions.Shuffle(SpreadCodeLayout);
-
         }
 
+        //Set the num of rows and collumns
         SetNumOfRowCols();
         
+        //Set the grid arrays to be of the height and width of rows and columns
         codeGrid = new int[numOfRows, numOfCols];
-
         directionalGrid = new int[numOfRows, numOfCols];
-
         numOfDirectionGrid = new int[numOfRows, numOfCols];
-
         PillarNumScript = new PillarNumberScript[numOfRows, numOfCols];
 
+        //Loop through all instances in 2D arrays
         for(int i = 0; i < numOfRows; i++)
         {
             for (int j = 0; j < numOfCols; j++)
@@ -74,28 +76,36 @@ public class PillarSpawningScript : MonoBehaviour
             }
         }
 
+        //Fill the code grid
         FillCodeGrid();
+
+        //Spawn all pillars
         SpawnPillars();
         CheckDirectionForNumber();
     }
 
     /// <summary>
-    /// Function to destroy all pillars at end of level
+    /// Destroy all pillars at end of level
     /// </summary>
-    public void DestroyAllPillars()
+    private void OnDestroy()
     {
-        for(int i = 0; i < numOfRows; i++)
+        //Loop through all pillars in grid, and destroy them
+        for (int i = 0; i < numOfRows; i++)
         {
-            for(int j = 0; j < numOfCols; j++)
+            for (int j = 0; j < numOfCols; j++)
             {
                 Destroy(PillarNumScript[i, j].gameObject);
             }
         }
     }
 
+    /// <summary>
+    /// Set the number of rows and collumns for this instance of the puzzle
+    /// </summary>
     private void SetNumOfRowCols()
     {
-        
+        //Set the number of rows and columns to a random range,
+        //varying depending on the chosen difficulty
         switch (PuzzleManagement.ChosenDifficulty)
         {
             case PuzzleManagement.Difficulty.EASY:
@@ -107,7 +117,7 @@ public class PillarSpawningScript : MonoBehaviour
                 numOfCols = Random.Range(3, 5);
                 break;
             case PuzzleManagement.Difficulty.HARD:
-                numOfRows = Random.Range(3, 6);
+                numOfRows = Random.Range(4, 6);
                 numOfCols = Random.Range(4, 8);
                 break;
             default:
@@ -115,8 +125,7 @@ public class PillarSpawningScript : MonoBehaviour
                 numOfCols = 3;
                 break;
         }
-        //numOfRows = 7;
-        //numOfCols = 3;
+        
         Debug.Log("num of rows: " + numOfRows);
         Debug.Log("num of cols: " + numOfCols);
     }
@@ -133,7 +142,7 @@ public class PillarSpawningScript : MonoBehaviour
 
         for (int i = 0; i < numOfRows; i++)
         {
-            //If all code numbers have been entered, break out of loop
+            //If all code numbers have been entered into the grid, break out of loop
             if (codeNumsInGrid == numOfCodeNeeded)
             {
                 break;
@@ -159,7 +168,7 @@ public class PillarSpawningScript : MonoBehaviour
                 int shouldEnter = Random.Range(0, 2);
                 
                 //If there are only just enough spaces left to fill grid,
-                //Definitely enter this instance
+                //Definitely enter the number this instance
                 if(spacesLeft == numOfCodeNeeded - codeNumsInGrid)
                 {
                     shouldEnter = 1;
@@ -169,12 +178,9 @@ public class PillarSpawningScript : MonoBehaviour
                 //If code number should be entered
                 if (shouldEnter == 1)
                 {
-                    //Set grid instance to the code number
+                    //Set grid instance to the code number and increase number of numbers in grid
                     codeGrid[i, j] = SpreadCodeLayout[codeNumsInGrid];
                     codeNumsInGrid++;
-
-                    
-
 
                     //If grid instance is on top row
                     if (i == 0)
@@ -182,12 +188,13 @@ public class PillarSpawningScript : MonoBehaviour
                         //If top left
                         if (j == 0)
                         {
+                            //Number to decide if number to be spread out in which direction
                             int randChoice = Random.Range(0, 2);
                             if (randChoice == 1)
                             {
                                 //If top row, direction to view number goes down
                                 directionalGrid[i, j] = 3;
-                                
+                                //Increase the amount of numbers on this pillar
                                 AddNumberofNumsOnPillar(true, j);
                             }
                             else
@@ -279,7 +286,7 @@ public class PillarSpawningScript : MonoBehaviour
                         continue;
                     }
 
-                    //If Left column
+                    //If just Left column
                     if (j == 0)
                     {
                         //If Left column, direction goes Right
@@ -291,7 +298,7 @@ public class PillarSpawningScript : MonoBehaviour
                         continue;
                     }
 
-                    //If Right column
+                    //If just Right column
                     if (j == numOfCols - 1)
                     {
                         //If Right column, direction goes Left
@@ -311,26 +318,38 @@ public class PillarSpawningScript : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Function for adding the amount of numbers on a single pillar
+    /// </summary>
+    /// <param name="vertical"></param>
+    /// <param name="currentIndex"></param>
     private void AddNumberofNumsOnPillar(bool vertical, int currentIndex)
     {
-        //If adding in a vertical line
+        //If adding, spread out in a vertical line
         if(vertical)
         {
+            //Go through each row
             for (int k = 0; k < numOfRows; k++)
             {
+                //Increase the number in this array index
                 numOfDirectionGrid[k, currentIndex]++;
             }
         }
         //If adding in a horizontal line
         else
         {
+            //Go through each column
             for (int k = 0; k < numOfCols; k++)
             {
+                //Increase the number in this array index
                 numOfDirectionGrid[currentIndex, k]++;
             }
         }
     }
 
+    /// <summary>
+    /// Function to spawn all pillars in correct positions
+    /// </summary>
     private void SpawnPillars()
     {
         float startSpawnX = 0;
@@ -452,32 +471,6 @@ public class PillarSpawningScript : MonoBehaviour
         }
         UsefulFunctions.Shuffle(numOfPartsInEachPillar);
 
-        //if (thisNumberParts.Count > availablePillars)
-        //{
-        //    //If can be evenly split - which it will never be able to be
-        //    if(thisNumberParts.Count % availablePillars == 0)
-        //    {
-
-        //    }
-
-        //    if(thisNumberParts.Count-1 % availablePillars == 0)
-        //    {
-
-        //    }
-
-        //    //If even number of pillars
-        //    if(availablePillars % 2 == 0)
-        //    {
-
-        //    }
-
-        //    int extraParts = thisNumberParts.Count - availablePillars;
-        //    for (int i = 0; i < thisNumberParts.Count; i++)
-        //    {
-        //        //int thisPillar = Random.Range(0, 9);
-        //        numOfPartsInThisPillar[i] = 1;
-        //    }
-        //}
     }
 
 
@@ -565,14 +558,5 @@ public class PillarSpawningScript : MonoBehaviour
     //    }
 
     // Start is called before the first frame update
-        void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
