@@ -430,53 +430,6 @@ public class PillarSpawningScript : MonoBehaviour
 
 
     /// <summary>
-    /// Splits a number prefab into multiple parts to be distributed
-    /// </summary>
-    /// <param name="numPartsPrefab"></param>
-    /// <param name="availablePillars"></param>
-    public void SplitNum(WholeNumberParts numPartsPrefab, int availablePillars)
-    {
-        //Clear the previous number of parts in each pillar
-        numOfPartsInEachPillar.Clear();
-        //Set this number parts list to the chosen number prefab parts
-        thisNumberParts = numPartsPrefab.numParts;
-
-        //Shuffle the order of number parts up
-        UsefulFunctions.Shuffle(thisNumberParts);
-        
-        int currentPillar = 0;
-        //For i is less than the count of thisNumberParts list
-        for(int i = 0; i < thisNumberParts.Count; i++)
-        {
-            //If the count of pillars is not equal to the number of available pillars in row or column
-            if(numOfPartsInEachPillar.Count != availablePillars)
-            {
-                //Add an instance of 1 to the list
-                numOfPartsInEachPillar.Add(1);
-            }
-            //If the list is as long as the number of available pillars
-            else
-            {
-                //If current pillar value is equal to the amount of available pillars
-                if(currentPillar == availablePillars)
-                {
-                    //Set current pillar back to 0
-                    currentPillar = 0;
-                }
-                //Increase the number of parts on current pillar by 1
-                numOfPartsInEachPillar[currentPillar] += 1;
-                currentPillar++;
-            }
-        }
-
-        //Shuffle the order of parts in pillars, so that the first pillar doesn't always
-        //contain the most parts
-        UsefulFunctions.Shuffle(numOfPartsInEachPillar);
-
-    }
-
-
-    /// <summary>
     /// Function to loop through and spawn the specified amount of parts of the current number in 
     /// each pillar in the row/column
     /// </summary>
@@ -516,22 +469,66 @@ public class PillarSpawningScript : MonoBehaviour
             }
         }
 
-        //If on hard difficulty, add order numbers to pillars to remove the chance of the player needing
-        //to enter thousands of sequence possibilities from the numbers found in pillars
-        if(PuzzleManagement.ChosenDifficulty == PuzzleManagement.Difficulty.HARD)
+
+
+        //Get the number's position within the code sequence
+        int placeInOrder = PillarNumScript[i, j].WorkOutNumberInCodeSequence(codeGrid[i, j]);
+        if(placeInOrder == 100)
         {
-            //Get the number's position within the code sequence
-            int placeInOrder = PillarNumScript[i, j].WorkOutNumberInCodeSequence(codeGrid[i, j]);
-            if(placeInOrder == 100)
-            {
-                Debug.LogError("Number not found in code");
-                return;
-            }
-
-            //Spawn a sprite on the starting pillar for the number, to state it's order in the code
-            PillarNumScript[i, j].SpawnNumberInSequence(placeInOrder);
-
+            Debug.LogError("Number not found in code");
+            return;
         }
+
+        //Spawn a sprite on the starting pillar for the number, to state it's order in the code
+        PillarNumScript[i, j].SpawnNumberInSequence(placeInOrder);
+
+    }
+
+
+    /// <summary>
+    /// Splits a number prefab into multiple parts to be distributed
+    /// </summary>
+    /// <param name="numPartsPrefab"></param>
+    /// <param name="availablePillars"></param>
+    public void SplitNum(WholeNumberParts numPartsPrefab, int availablePillars)
+    {
+        //Clear the previous number of parts in each pillar
+        numOfPartsInEachPillar.Clear();
+        //Set this number parts list to the chosen number prefab parts
+        thisNumberParts = numPartsPrefab.numParts;
+
+        //Shuffle the order of number parts up
+        UsefulFunctions.Shuffle(thisNumberParts);
+
+        int currentPillar = 0;
+        //For i is less than the count of thisNumberParts list
+        for (int i = 0; i < thisNumberParts.Count; i++)
+        {
+            //If the count of pillars is not equal to the number of available pillars in row or column
+            if (numOfPartsInEachPillar.Count != availablePillars)
+            {
+                //Add an instance of 1 to the list
+                numOfPartsInEachPillar.Add(1);
+            }
+            //If the list is as long as the number of available pillars
+            else
+            {
+                //If current pillar value is equal to the amount of available pillars
+                if (currentPillar == availablePillars)
+                {
+                    //Set current pillar back to 0
+                    currentPillar = 0;
+                }
+                //Increase the number of parts on current pillar by 1
+                numOfPartsInEachPillar[currentPillar] += 1;
+                currentPillar++;
+            }
+        }
+
+        //Shuffle the order of parts in pillars, so that the first pillar doesn't always
+        //contain the most parts
+        UsefulFunctions.Shuffle(numOfPartsInEachPillar);
+
     }
 
 

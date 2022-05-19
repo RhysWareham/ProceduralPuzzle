@@ -153,8 +153,8 @@ public class CodeBarScript : MonoBehaviour
     {
         for (int i = 0; i < PuzzleManagement.RequiredCode.Count; i++)
         {
-            //If on easy difficulty
-            if(PuzzleManagement.ChosenDifficulty == PuzzleManagement.Difficulty.EASY)
+            //If not on hard mode
+            if(PuzzleManagement.ChosenDifficulty != PuzzleManagement.Difficulty.HARD)
             {
                 //If the number is not in the correct position in the sequence, set sprite to the failed colour
                 if(enterableSlots[i].GetComponent<SpriteRenderer>().color != Color.green)
@@ -163,7 +163,7 @@ public class CodeBarScript : MonoBehaviour
 
                 }
             }
-            //If not on easy, set all slot sprites to the failed colour
+            //If on hard, set all slot sprites to the failed colour after an attempt
             else
             {
                 enterableSlots[i].GetComponent<SpriteRenderer>().color = failColor;

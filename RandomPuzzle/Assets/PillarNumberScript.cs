@@ -12,6 +12,8 @@ public class PillarNumberScript : MonoBehaviour
     [SerializeField] private SpriteRenderer numInCode;
     [SerializeField] private List<Sprite> numbers;
 
+    [SerializeField] private MarkSpawning markSpawner;
+
 
     /// <summary>
     /// Spawns the number order sprite on the pillar
@@ -19,8 +21,27 @@ public class PillarNumberScript : MonoBehaviour
     /// <param name="numInSequence"></param>
     public void SpawnNumberInSequence(int numInSequence)
     {
-        //Spawn a sprite of this number's position in code sequence, on this starting pillar
-        numInCode.sprite = numbers[numInSequence];
+        switch(PuzzleManagement.ChosenDifficulty)
+        {
+            //On easy mode, spawn a sprite displaying this pillar's order in code sequence
+            case PuzzleManagement.Difficulty.EASY:
+                numInCode.sprite = numbers[numInSequence];
+                break;
+
+            case PuzzleManagement.Difficulty.MEDIUM:
+                //Don't give any hint for medium
+                //as the order for pillars remains top left to bottom right still
+                //But will player figure this out?
+                break;
+
+            //On hard mode, spawn marks around the pillars to show the order number
+            //To remove the chance of the player needing to enter thousands of sequence
+            //possibilities from the numbers found in pillars
+            case PuzzleManagement.Difficulty.HARD:
+                markSpawner.SpawnMarks(numInSequence);
+                break;
+
+        }
     }
 
 
@@ -28,7 +49,7 @@ public class PillarNumberScript : MonoBehaviour
     /// Work out the number's position within the code sequence
     /// </summary>
     /// <param name="thisNumber"></param>
-    /// <returns></returns>
+    /// <returns></returns> 3534
     public int WorkOutNumberInCodeSequence(int thisNumber)
     {
         //Loop through all numbers in the code
@@ -37,14 +58,14 @@ public class PillarNumberScript : MonoBehaviour
             //If this number is equal to the value in current index of the code
             if(thisNumber == PuzzleManagement.RequiredCode[i])
             {
-                //If this number is not already in the order list at this index
-                if(PuzzleManagement.ShuffledOrder.Count == 0 || 
-                    PuzzleManagement.ShuffledOrder[PuzzleManagement.ShuffledOrder.Count-1] != i)
+                //If this index is not already in the order list
+                if (PuzzleManagement.ShuffledOrder.Count == 0 || 
+                    !PuzzleManagement.ShuffledOrder.Contains(i))
                 {
                     //Add the index to the order list
                     //because i is the position that thisNumber is found within the initial code order
                     PuzzleManagement.ShuffledOrder.Add(i);
-                    
+
                     //Return the index
                     return i;
                 }
