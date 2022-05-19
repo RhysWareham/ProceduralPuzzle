@@ -27,7 +27,7 @@ public class HighscoreScript : MonoBehaviour
             PuzzleManagement.FastestTime[(int)PuzzleManagement.ChosenDifficulty] == 0)
         {
             //Update new fastest time
-            PuzzleManagement.FastestTime[(int)PuzzleManagement.ChosenDifficulty] = newTime;
+            PuzzleManagement.FastestTime[(int)PuzzleManagement.ChosenDifficulty] = ((Mathf.Round(newTime * 100f)) / 100f);
         }
 
         MakeHighScoresVisible();
