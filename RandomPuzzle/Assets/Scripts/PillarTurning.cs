@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PillarTurning : MonoBehaviour
 {
@@ -11,53 +12,68 @@ public class PillarTurning : MonoBehaviour
 
     private Vector3 targetRotation;
 
+    [SerializeField] private InputActionReference clockWiseActionReference;
+    private InputAction ClockwiseButton => clockWiseActionReference ? clockWiseActionReference.action : null;
+    
+    [SerializeField] private InputActionReference anticlockWiseActionReference;
+    private InputAction AntiClockwiseButton => anticlockWiseActionReference ? anticlockWiseActionReference.action : null;
+
+
     // Start is called before the first frame update
     void Start()
     {
         moveablePillar = GetComponentInChildren<Moveable>().gameObject;
+        AntiClockwiseButton.performed += AntiClockwiseButton_performed;
+        ClockwiseButton.performed += ClockwiseButton_performed;
     }
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// Function for pressing clockwise turning button
+    /// </summary>
+    /// <param name="obj"></param>
+    private void ClockwiseButton_performed(InputAction.CallbackContext obj)
     {
-        //If in range
         if(InRange)
         {
-            //If Q is pressed
-            if (Input.GetKeyDown(KeyCode.Q))
+            //If coroutine is running
+            if (turningCoroutine != null)
             {
-                //If the coroutine is running
-                if(turningCoroutine != null)
-                {
-                    //Stop coroutine
-                    StopCoroutine(turningCoroutine);
-                    //Set target rotation and apply it to the pillar
-                    Quaternion target = Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z);
-                    moveablePillar.transform.rotation = target;
-                }
-
-                //Start coroutine to rotate pillar
-                turningCoroutine = StartCoroutine(RotatePillar(-1));
+                //Stop coroutine
+                StopCoroutine(turningCoroutine);
+                //Set target rotation and apply it to the pillar
+                Quaternion target = Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z);
+                moveablePillar.transform.rotation = target;
             }
-            //If E is pressed
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                //If coroutine is running
-                if(turningCoroutine != null)
-                {
-                    //Stop coroutine
-                    StopCoroutine(turningCoroutine);
-                    //Set target rotation and apply it to the pillar
-                    Quaternion target = Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z);
-                    moveablePillar.transform.rotation = target;
-                }
 
-                //Start coroutine to rotate pillar
-                turningCoroutine = StartCoroutine(RotatePillar(1));
-                
-            }
+            //Start coroutine to rotate pillar
+            turningCoroutine = StartCoroutine(RotatePillar(1));
         }
     }
+
+    /// <summary>
+    /// Function for pressing anticlockwise turning button
+    /// </summary>
+    /// <param name="obj"></param>
+    private void AntiClockwiseButton_performed(InputAction.CallbackContext obj)
+    {
+        if(InRange)
+        {
+            //If the coroutine is running
+            if (turningCoroutine != null)
+            {
+                //Stop coroutine
+                StopCoroutine(turningCoroutine);
+                //Set target rotation and apply it to the pillar
+                Quaternion target = Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z);
+                moveablePillar.transform.rotation = target;
+            }
+
+            //Start coroutine to rotate pillar
+            turningCoroutine = StartCoroutine(RotatePillar(-1));
+        }
+    }
+
+
 
     /// <summary>
     /// Coroutine to smoothly rotate the pillar to correct rotation

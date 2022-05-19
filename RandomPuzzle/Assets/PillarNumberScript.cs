@@ -16,32 +16,25 @@ public class PillarNumberScript : MonoBehaviour
 
 
     /// <summary>
-    /// Spawns the number order sprite on the pillar
+    /// Spawns a way of displaying the number order on the pillar
     /// </summary>
     /// <param name="numInSequence"></param>
     public void SpawnNumberInSequence(int numInSequence)
     {
-        switch(PuzzleManagement.ChosenDifficulty)
+        if(PuzzleManagement.ChosenDifficulty == PuzzleManagement.Difficulty.EASY)
         {
             //On easy mode, spawn a sprite displaying this pillar's order in code sequence
-            case PuzzleManagement.Difficulty.EASY:
-                numInCode.sprite = numbers[numInSequence];
-                break;
-
-            case PuzzleManagement.Difficulty.MEDIUM:
-                //Don't give any hint for medium
-                //as the order for pillars remains top left to bottom right still
-                //But will player figure this out?
-                break;
-
-            //On hard mode, spawn marks around the pillars to show the order number
+            numInCode.sprite = numbers[numInSequence];
+        }
+        else
+        {
+            //On hard and medium mode, spawn marks around the pillars to show the order number
             //To remove the chance of the player needing to enter thousands of sequence
             //possibilities from the numbers found in pillars
-            case PuzzleManagement.Difficulty.HARD:
-                markSpawner.SpawnMarks(numInSequence);
-                break;
+            markSpawner.SpawnMarks(numInSequence);
 
         }
+
     }
 
 

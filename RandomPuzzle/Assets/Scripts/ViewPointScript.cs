@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ViewPointScript : MonoBehaviour
 {
@@ -10,10 +11,44 @@ public class ViewPointScript : MonoBehaviour
     private bool cameraView = false;
     private Vector3 playerPos;
 
+    [SerializeField] private InputActionReference pillarViewActionReference;
+    private InputAction PillarViewActionButton => pillarViewActionReference ? pillarViewActionReference.action : null;
+
+    
+
     // Start is called before the first frame update
     void Start()
     {
         holeCamera = GetComponent<Camera>();
+        PillarViewActionButton.performed += PillarViewActionButton_performed;
+    }
+
+    /// <summary>
+    /// Function to look through or exit pillar view port 
+    /// </summary>
+    /// <param name="obj"></param>
+    private void PillarViewActionButton_performed(InputAction.CallbackContext obj)
+    {
+        //If in range
+        if(InRange)
+        {
+            //If not in hole view
+            if (!cameraView)
+            {
+                //Enable hole camera and disable player camera
+                holeCamera.enabled = true;
+                playerCamera.enabled = false;
+                cameraView = true;
+                playerPos = playerCamera.transform.parent.position;
+            }
+            else
+            {
+                //Enable player camera and disable hole camera
+                playerCamera.enabled = true;
+                holeCamera.enabled = false;
+                cameraView = false;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -21,26 +56,6 @@ public class ViewPointScript : MonoBehaviour
     {
         if (InRange)
         {
-            //If F is pressed
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                //If not in hole view
-                if(!cameraView)
-                {
-                    //Enable hole camera and disable player camera
-                    holeCamera.enabled = true;
-                    playerCamera.enabled = false;
-                    cameraView = true;
-                    playerPos = playerCamera.transform.parent.position;
-                }
-                else
-                {
-                    //Enable player camera and disable hole camera
-                    playerCamera.enabled = true;
-                    holeCamera.enabled = false;
-                    cameraView = false;
-                }
-            }
             //If in hole view
             if(cameraView)
             {

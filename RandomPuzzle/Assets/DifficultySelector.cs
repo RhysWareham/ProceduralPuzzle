@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DifficultySelector : MonoBehaviour
 {
@@ -12,24 +13,32 @@ public class DifficultySelector : MonoBehaviour
     private Coroutine currentCoroutine;
     private float moveSpeed = 5f;
 
+    [SerializeField] private InputActionReference selectActionReference;
+    private InputAction SelectActionButton => selectActionReference ? selectActionReference.action : null;
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
+    {
+        SelectActionButton.performed += SelectActionButton_performed;
+    }
+
+
+    /// <summary>
+    /// Function for selection of button
+    /// </summary>
+    /// <param name="obj"></param>
+    private void SelectActionButton_performed(InputAction.CallbackContext obj)
     {
         //If in range
-        if(inRange)
+        if (inRange)
         {
-            //If enter has been pressed
-            if (Input.GetKeyDown(KeyCode.Return))
-            {
-                //Don't allow for spamming of pillar creation
-                GetComponent<Collider>().enabled = false;
-                inRange = false;
+            //Don't allow for spamming of pillar creation
+            GetComponent<Collider>().enabled = false;
+            inRange = false;
 
-                Debug.Log("Pressed");
-                //Call the create puzzle function using specified difficulty
-                manager.CreatePuzzle(difficulty);
-            }
+            Debug.Log("Pressed");
+            //Call the create puzzle function using specified difficulty
+            manager.CreatePuzzle(difficulty);
+            
 
         }
     }
