@@ -86,15 +86,11 @@ public class ButtonPanelScript : MonoBehaviour
                     }
                 }
 
-                //If codebar is filled
-                if (codeBar.codeFilled)
-                {
-                    //Move selected position to the OK button
-                    selectedButton.position = okButton.position;
-                }
+                
             }
         }
     }
+
 
     /// <summary>
     /// Function for when select button has been pressed
@@ -102,14 +98,21 @@ public class ButtonPanelScript : MonoBehaviour
     /// <param name="obj"></param>
     private void SelectActionButton_performed(InputAction.CallbackContext obj)
     {
-        //If in range
-        if(InRange)
+        //If in range and codebar is ready to take input
+        if(InRange && codeBar.codebarReady)
         {
             //If codebar is not filled
             if(!codeBar.codeFilled)
             {
                 //Enter the chosen number
                 codeBar.EnterButtonNumber(buttonPositions[currentButtonPos].GetComponent<SpriteRenderer>().sprite, currentButtonPos + 1);
+
+                //If codebar is now filled
+                if (codeBar.codeFilled)
+                {
+                    //Move selected position to the OK button
+                    selectedButton.position = okButton.position;
+                }
             }
             //If code bar is filled
             else
@@ -120,6 +123,8 @@ public class ButtonPanelScript : MonoBehaviour
                 selectedButton.position = buttonPositions[0].position;
                 currentButtonPos = 0;
             }
+
+            
         }
     }
 

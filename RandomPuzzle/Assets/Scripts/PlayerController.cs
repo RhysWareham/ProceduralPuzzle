@@ -14,10 +14,4 @@ public class PlayerController : MonoBehaviour
         inputHandler = GetComponent<PlayerInput>();
         playerCamera = GetComponentInChildren<Camera>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

@@ -13,5 +13,8 @@ public static class PuzzleManagement
         HARD
     };
 
-    public static Difficulty ChosenDifficulty; 
+    public static Difficulty ChosenDifficulty;
+
+    public static bool PuzzleComplete = true;
+    public static float[] FastestTime = new float[3] { 0.0f, 0.0f, 0.0f }; //Easy time, Medium time, Hard time
 }

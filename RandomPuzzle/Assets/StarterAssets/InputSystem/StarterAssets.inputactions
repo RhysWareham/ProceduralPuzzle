@@ -169,7 +169,7 @@
                     "id": "d1d171b6-19d8-47a6-ba3a-71b6a8e7b3c0",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
-                    "processors": "InvertVector2(invertX=false),StickDeadzone,ScaleVector2(x=300,y=300)",
+                    "processors": "InvertVector2(invertX=false),StickDeadzone,ScaleVector2(x=150,y=150)",
                     "groups": "Gamepad",
                     "action": "Look",
                     "isComposite": false,
@@ -182,17 +182,6 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9f973413-5e27-4239-acee-38c4a63feeba",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
                     "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -255,8 +244,8 @@
                 {
                     "name": "",
                     "id": "e3adae0a-f9ed-448b-acff-c34b9df85135",
-                    "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "RotateAnticlockwise",
@@ -277,8 +266,8 @@
                 {
                     "name": "",
                     "id": "c8a97543-22ff-4e86-9990-58c151459515",
-                    "path": "<Gamepad>/leftTrigger",
-                    "interactions": "",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "RotateClockwise",

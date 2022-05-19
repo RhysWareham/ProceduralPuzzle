@@ -1133,7 +1133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 671b1685068d9904591e574da1337a9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pillarViewActionReference: {fileID: 0}
+  pillarViewActionReference: {fileID: -1471471245041331440, guid: 4419d82f33d36e848b3ed5af4c8da37e, type: 3}
 --- !u!1 &7536815506310935183
 GameObject:
   m_ObjectHideFlags: 0

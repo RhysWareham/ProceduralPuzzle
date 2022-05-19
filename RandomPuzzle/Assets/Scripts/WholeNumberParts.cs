@@ -8,7 +8,6 @@ public class WholeNumberParts : MonoBehaviour
     [SerializeField] public List<SpriteRenderer> numParts;
 
 
-
 }
 
 

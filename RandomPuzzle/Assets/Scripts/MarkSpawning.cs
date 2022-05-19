@@ -7,6 +7,7 @@ public class MarkSpawning : MonoBehaviour
     [SerializeField] private List<SpriteRenderer> markSpawnPoints = new List<SpriteRenderer>();
     [SerializeField] private List<Sprite> marks;
 
+
     /// <summary>
     /// Function spawning number of marks to show what position in code sequence it is
     /// </summary>

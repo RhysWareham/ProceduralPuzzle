@@ -9,6 +9,7 @@ public class CodeBarScript : MonoBehaviour
     private List<int> enteredCode = new List<int>();
     private int numOfNumbersEntered = 0;
     public bool codeFilled = false;
+    public bool codebarReady = true;
 
     [SerializeField] private GameObject emptyFieldPrefab;
     [SerializeField] private Transform slotSpawnPoint;
@@ -25,11 +26,13 @@ public class CodeBarScript : MonoBehaviour
         emptyField = enterableSlots[0].GetComponent<SpriteRenderer>().sprite;
     }
 
+
     private void Awake()
     {
         //Spawn the code bar slots
         SpawnCodeBarSlots();
     }
+
 
     /// <summary>
     /// Resets the codebar
@@ -48,6 +51,7 @@ public class CodeBarScript : MonoBehaviour
         codeFilled = false;
         numOfNumbersEntered = 0;
     }
+
 
     /// <summary>
     /// Function to spawn the slot sprites on the code bar, and spread evenly
@@ -77,6 +81,7 @@ public class CodeBarScript : MonoBehaviour
         }
     }
 
+
     /// <summary>
     /// Function for when a player has entered a number into the code panel
     /// </summary>
@@ -97,6 +102,7 @@ public class CodeBarScript : MonoBehaviour
             codeFilled = true;
         }
     }
+
 
     /// <summary>
     /// Function to check if the enterred code is correct
@@ -130,11 +136,13 @@ public class CodeBarScript : MonoBehaviour
         
     }
 
+
     /// <summary>
     /// Reset the code bar by clearing the entered values
     /// </summary>
     public void ResetCodeBarOnFailure()
     {
+        codebarReady = false;
         //Start a coroutine to flash the slots red
         StartCoroutine(FlashColour(Color.red));
 
@@ -142,7 +150,9 @@ public class CodeBarScript : MonoBehaviour
         numOfNumbersEntered = 0;
         enteredCode.Clear();
         codeFilled = false;
+        
     }
+
 
     /// <summary>
     /// Flashes the slot sprites a specified colour
@@ -180,6 +190,8 @@ public class CodeBarScript : MonoBehaviour
             enterableSlots[i].GetComponent<SpriteRenderer>().sprite = emptyField;
             enterableSlots[i].GetComponent<SpriteRenderer>().color = Color.white;
         }
+
+        codebarReady = true;
         yield return 0;
     }
 }

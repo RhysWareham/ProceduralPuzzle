@@ -13,15 +13,17 @@ public class ViewPointScript : MonoBehaviour
 
     [SerializeField] private InputActionReference pillarViewActionReference;
     private InputAction PillarViewActionButton => pillarViewActionReference ? pillarViewActionReference.action : null;
-
-    
+        
 
     // Start is called before the first frame update
     void Start()
     {
         holeCamera = GetComponent<Camera>();
+
         PillarViewActionButton.performed += PillarViewActionButton_performed;
+
     }
+
 
     /// <summary>
     /// Function to look through or exit pillar view port 
@@ -51,6 +53,7 @@ public class ViewPointScript : MonoBehaviour
         }
     }
 
+
     // Update is called once per frame
     void Update()
     {
@@ -70,6 +73,7 @@ public class ViewPointScript : MonoBehaviour
             }
         }
     }
+
 
     private void OnTriggerEnter(Collider other)
     {

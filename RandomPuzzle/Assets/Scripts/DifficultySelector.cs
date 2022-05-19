@@ -38,7 +38,6 @@ public class DifficultySelector : MonoBehaviour
             Debug.Log("Pressed");
             //Call the create puzzle function using specified difficulty
             manager.CreatePuzzle(difficulty);
-            
 
         }
     }

@@ -19,8 +19,11 @@ public class PuzzleManager : MonoBehaviour
     [SerializeField] private List<DifficultySelector> buttons = new List<DifficultySelector>();
     private bool firstTime = true;
 
+    [SerializeField] private Timer timer;
+
     private Coroutine pillarMovingCoroutine;
     
+
     /// <summary>
     /// Function to reset the puzzle room
     /// </summary>
@@ -49,6 +52,7 @@ public class PuzzleManager : MonoBehaviour
         }
 
     }
+
 
     /// <summary>
     /// Function to start the creation of the puzzle
@@ -101,9 +105,16 @@ public class PuzzleManager : MonoBehaviour
         //Spawn the pillar creator
         SpawnPillarCreator();
 
+        //Set puzzle complete to false
+        PuzzleManagement.PuzzleComplete = false;
+        
+        //Start the timer
+        timer.StartTimer();
+
         //Raise the pillars
         pillarMovingCoroutine = StartCoroutine(MovePillars());
     }
+
 
     /// <summary>
     /// Coroutine to move raise the pillars through the ground
@@ -123,6 +134,7 @@ public class PuzzleManager : MonoBehaviour
         }
     }
 
+
     /// <summary>
     /// Function to generate a random code of correct length
     /// </summary>
@@ -140,6 +152,7 @@ public class PuzzleManager : MonoBehaviour
         Debug.Log("lengthOfCode: " + lengthOfCode);
     }
 
+
     /// <summary>
     /// Instantiates the code bar panel
     /// </summary>
@@ -147,6 +160,7 @@ public class PuzzleManager : MonoBehaviour
     {
         codeBar = Instantiate(keyCodePanelPrefab, codePanelPos).GetComponentInChildren<CodeBarScript>();
     }
+
 
     /// <summary>
     /// Instantiates the pillar spawner
@@ -156,13 +170,18 @@ public class PuzzleManager : MonoBehaviour
         pillarSpawner = Instantiate(pillarSpawnerPrefab, pillarSpawnPos).GetComponent<PillarSpawningScript>();
     }
     
+
     /// <summary>
     /// Call the unlock door function
     /// </summary>
     public void ActivateDoor()
     {
+        //Stop the timer as puzzle is complete
+        PuzzleManagement.PuzzleComplete = true;
+        timer.StopTimer();
         door.Unlock();
     }
+
 
     /// <summary>
     /// Calls the lock function for back door

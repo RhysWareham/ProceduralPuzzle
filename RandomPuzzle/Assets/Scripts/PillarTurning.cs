@@ -27,6 +27,7 @@ public class PillarTurning : MonoBehaviour
         ClockwiseButton.performed += ClockwiseButton_performed;
     }
 
+
     /// <summary>
     /// Function for pressing clockwise turning button
     /// </summary>
@@ -49,6 +50,7 @@ public class PillarTurning : MonoBehaviour
             turningCoroutine = StartCoroutine(RotatePillar(1));
         }
     }
+
 
     /// <summary>
     /// Function for pressing anticlockwise turning button
@@ -74,7 +76,6 @@ public class PillarTurning : MonoBehaviour
     }
 
 
-
     /// <summary>
     /// Coroutine to smoothly rotate the pillar to correct rotation
     /// </summary>
@@ -92,6 +93,7 @@ public class PillarTurning : MonoBehaviour
             yield return 0;
         }
     }
+
 
     private void OnTriggerEnter(Collider other)
     {

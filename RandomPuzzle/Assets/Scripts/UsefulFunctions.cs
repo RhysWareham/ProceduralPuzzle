@@ -5,7 +5,13 @@ using System.Collections.Generic;
 
 public static class UsefulFunctions
 {
-    //https://stackoverflow.com/questions/69115335/cannot-create-an-instance-of-the-static-class-random
+    ///Reference:
+    /// Stack Overflow. 2009. Randomize a List<T>. [online] Available at: <https://stackoverflow.com/questions/273313/randomize-a-listt> [Accessed 19 April 2022].
+    /// <summary>
+    /// Function for shuffling values in a list
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="list"></param>
     public static void Shuffle<T>(this IList<T> list)
     {
         System.Random rand = new System.Random();

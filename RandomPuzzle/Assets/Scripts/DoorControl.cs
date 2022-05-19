@@ -31,6 +31,7 @@ public class DoorControl : MonoBehaviour
         currentCoroutine = StartCoroutine(MoveDoor(unlockedPos));
     }
 
+
     /// <summary>
     /// Function to lock the door
     /// </summary>
@@ -49,6 +50,7 @@ public class DoorControl : MonoBehaviour
         currentCoroutine = StartCoroutine(MoveDoor(lockedPos));
     }
 
+
     /// <summary>
     /// Function checking if coroutine is running
     /// </summary>
@@ -61,6 +63,7 @@ public class DoorControl : MonoBehaviour
         }
         return false;
     }
+
 
     /// <summary>
     /// Coroutine to move door to given position
