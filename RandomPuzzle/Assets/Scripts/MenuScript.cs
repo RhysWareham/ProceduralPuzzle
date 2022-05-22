@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class MenuScript : MonoBehaviour
 {
     [SerializeField] private GameObject menu;
     [SerializeField] private Timer timer;
+    [SerializeField] private Button closeButton;
 
     [SerializeField] private InputActionReference menuActionReference;
     private InputAction MenuButton => menuActionReference ? menuActionReference.action : null;
@@ -29,6 +31,8 @@ public class MenuScript : MonoBehaviour
         //If menu is open, stop timer
         if(menu.activeSelf)
         {
+            //Set selected button to be the close menu button on menu open
+            closeButton.Select();
             timer.StopTimer();
         }
         else

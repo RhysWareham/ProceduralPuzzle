@@ -101,11 +101,11 @@ public class PillarSpawningScript : MonoBehaviour
                 numOfCols = Random.Range(2, 4);
                 break;
             case PuzzleManagement.Difficulty.MEDIUM:
-                numOfRows = Random.Range(3, 5);
+                numOfRows = Random.Range(3, 6);
                 numOfCols = Random.Range(3, 5);
                 break;
             case PuzzleManagement.Difficulty.HARD:
-                numOfRows = Random.Range(4, 6);
+                numOfRows = Random.Range(4, 7);
                 numOfCols = Random.Range(4, 8);
                 break;
             default:
@@ -468,8 +468,6 @@ public class PillarSpawningScript : MonoBehaviour
 
             }
         }
-
-
 
         //Get the number's position within the code sequence
         int placeInOrder = PillarNumScript[i, j].WorkOutNumberInCodeSequence(codeGrid[i, j]);
